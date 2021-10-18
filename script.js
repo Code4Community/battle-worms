@@ -17,7 +17,6 @@ var config = {
 };
 
 var player;
-var bullet;
 var stars;
 //var bombs;
 var platforms;
@@ -33,7 +32,7 @@ function preload ()
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
-//    this.load.image('bomb', 'assets/bomb.png');   
+//  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
@@ -61,16 +60,6 @@ function create ()
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
-    // bullet physics and properties
-    bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
-    bullet.setCollideWorldBounds(true);
-
-    //this.physics.moveTo(bullet,0,0,60);
-    
-    // worry about killing bullet later
-    // bullet.checkWorldBounds = true;
-
-
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
@@ -95,9 +84,6 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
 
-    // Shooting input
-    spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
-
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
         key: 'star',
@@ -119,8 +105,6 @@ function create ()
 
     //  Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
-    // Need to kill bullet on colision with ground
-    this.physics.add.collider(bullet, platforms);
     this.physics.add.collider(stars, platforms);
     //this.physics.add.collider(bombs, platforms);
 
@@ -159,11 +143,6 @@ function update ()
     if (cursors.up.isDown && player.body.touching.down)
     {
         player.setVelocityY(-330);
-    }
-
-    if (Phaser.Input.Keyboard.JustDown(spacebar))
-    {
-        fire();
     }
 }
 
