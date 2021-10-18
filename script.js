@@ -19,7 +19,7 @@ var config = {
 var player;
 var bullet;
 var stars;
-var bombs;
+//var bombs;
 var platforms;
 var cursors;
 var score = 0;
@@ -33,7 +33,7 @@ function preload ()
     this.load.image('sky', 'assets/sky.png');
     this.load.image('ground', 'assets/platform.png');
     this.load.image('star', 'assets/star.png');
-    this.load.image('bomb', 'assets/bomb.png');
+//    this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
 }
 
@@ -112,7 +112,7 @@ function create ()
 
     });
 
-    bombs = this.physics.add.group();
+    //bombs = this.physics.add.group();
 
     //  The score
     scoreText = this.add.text(16, 16, 'score: 0', { fontSize: '32px', fill: '#000' });
@@ -122,12 +122,12 @@ function create ()
     // Need to kill bullet on colision with ground
     this.physics.add.collider(bullet, platforms);
     this.physics.add.collider(stars, platforms);
-    this.physics.add.collider(bombs, platforms);
+    //this.physics.add.collider(bombs, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
-    this.physics.add.collider(player, bombs, hitBomb, null, this);
+    //this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
 function update ()
@@ -186,16 +186,16 @@ function collectStar (player, star)
 
         var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
 
-        var bomb = bombs.create(x, 16, 'bomb');
-        bomb.setBounce(1);
-        bomb.setCollideWorldBounds(true);
-        bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        bomb.allowGravity = false;
+        //var bomb = bombs.create(x, 16, 'bomb');
+        //bomb.setBounce(1);
+        //bomb.setCollideWorldBounds(true);
+        //bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
+        //bomb.allowGravity = false;
 
     }
 }
 
-function hitBomb (player, bomb)
+/*function hitBomb (player, bomb)
 {
     this.physics.pause();
 
@@ -204,7 +204,7 @@ function hitBomb (player, bomb)
     player.anims.play('turn');
 
     gameOver = true;
-}
+}*/
 
 function fire() {
 
