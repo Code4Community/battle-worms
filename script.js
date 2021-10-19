@@ -39,6 +39,7 @@ function preload ()
 
 function create ()
 {
+    this.physics.world.setBounds(0,0,800,600);
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -63,12 +64,12 @@ function create ()
 
     // bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
+    bullet.setActive(false).setVisible(false);
     bullet.setCollideWorldBounds(true);
 
-    //this.physics.moveTo(bullet,0,0,60);
+    this.physics.world.on('worldbounds',bulletHitEdge);
+
     
-    // worry about killing bullet later
-    // bullet.checkWorldBounds = true;
 
 
     //  Our player animations, turning, walking left and walking right.
@@ -128,6 +129,12 @@ function create ()
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     this.physics.add.collider(player, bombs, hitBomb, null, this);
+
+    //this.physics.add.collider(bullet, stars, bulletHitEdge, null, this);
+
+    
+    
+    
 }
 
 function update ()
@@ -165,6 +172,8 @@ function update ()
     {
         fire();
     }
+
+    
 }
 
 function collectStar (player, star)
@@ -208,8 +217,14 @@ function hitBomb (player, bomb)
 
 function fire() {
 
-        this.bullet.setPosition(this.player.x, this.player.y);
 
-        this.bullet.setVelocityX(100);
-        this.bullet.setVelocityY(-500);
+    bullet.setActive(true).setVisible(true);
+    this.bullet.setPosition(this.player.x, this.player.y);
+
+    this.bullet.setVelocityX(100);
+    this.bullet.setVelocityY(0);
+}
+
+function bulletHitEdge() {
+    this.bullet.setActive(false).setVisible(false);
 }
