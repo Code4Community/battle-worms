@@ -61,7 +61,6 @@ function create ()
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
-<<<<<<< HEAD
     // bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
     bullet.setActive(false).setVisible(false);
@@ -69,11 +68,6 @@ function create ()
 
     this.physics.world.on('worldbounds',bulletHitEdge);
 
-    
-
-
-=======
->>>>>>> 540975f38a8361b01766d5fed9e6042c4d73492a
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
@@ -125,7 +119,6 @@ function create ()
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
-<<<<<<< HEAD
     this.physics.add.collider(player, bombs, hitBomb, null, this);
 
     //this.physics.add.collider(bullet, stars, bulletHitEdge, null, this);
@@ -133,9 +126,7 @@ function create ()
     
     
     
-=======
     //this.physics.add.collider(player, bombs, hitBomb, null, this);
->>>>>>> 540975f38a8361b01766d5fed9e6042c4d73492a
 }
 
 function update ()
@@ -168,16 +159,6 @@ function update ()
     {
         player.setVelocityY(-330);
     }
-<<<<<<< HEAD
-
-    if (Phaser.Input.Keyboard.JustDown(spacebar))
-    {
-        fire();
-    }
-
-    
-=======
->>>>>>> 540975f38a8361b01766d5fed9e6042c4d73492a
 }
 
 function collectStar (player, star)
@@ -222,7 +203,6 @@ function collectStar (player, star)
 function fire() {
 
 
-<<<<<<< HEAD
     bullet.setActive(true).setVisible(true);
     this.bullet.setPosition(this.player.x, this.player.y);
 
@@ -233,8 +213,5 @@ function fire() {
 function bulletHitEdge() {
     this.bullet.setActive(false).setVisible(false);
 }
-=======
         this.bullet.setVelocityX(100);
         this.bullet.setVelocityY(-500);
-}
->>>>>>> 540975f38a8361b01766d5fed9e6042c4d73492a
