@@ -63,13 +63,14 @@ function create ()
 
     // bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
-    bullet.setCollideWorldBounds(true);
+    disappearBullet();
+    //bullet.setCollideWorldBounds(true);
     bullet.body.collideWorldBounds = true;
     bullet.body.onWorldBounds = true;
 
     this.physics.world.on('worldbounds', (body, up, down, left, right)=>
     {
-        if(up, down, left, right) {
+        if(up || down || left || right) {
         disappearBullet();
     }});
     
