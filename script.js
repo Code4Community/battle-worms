@@ -101,6 +101,7 @@ function create ()
 
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
+    spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
