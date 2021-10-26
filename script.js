@@ -170,6 +170,10 @@ function update ()
     {
         player.setVelocityY(-330);
     }
+
+    if(spacebar.isDown) {
+        fire();
+    }
 }
 
 function collectStar (player, star)
