@@ -63,10 +63,20 @@ function create ()
 
     // bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
-    bullet.setActive(false).setVisible(false);
-    bullet.setCollideWorldBounds(true);
+    disappearBullet();
+    //bullet.setCollideWorldBounds(true);
+    bullet.body.collideWorldBounds = true;
+    bullet.body.onWorldBounds = true;
 
-    this.physics.world.on('worldbounds',bulletHitEdge);
+    this.physics.world.on('worldbounds', (body, up, down, left, right)=>
+    {
+        if(up || down || left || right) {
+        disappearBullet();
+    }});
+    
+    // still need to kill bullet on hitting ground
+    // bullet.checkWorldBounds = true;
+
 
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
@@ -200,16 +210,16 @@ function collectStar (player, star)
     gameOver = true;
 }*/
 
+// fires the bullet from the player
 function fire() {
 
+        this.bullet.setPosition(this.player.x, this.player.y);
+        bullet.setActive(true).setVisible(true);
 
-    bullet.setActive(true).setVisible(true);
-    this.bullet.setPosition(this.player.x, this.player.y);
-
-    this.bullet.setVelocityX(100);
-    this.bullet.setVelocityY(0);
+        this.bullet.setVelocityX(100);
+        this.bullet.setVelocityY(-500);
 }
 
-function bulletHitEdge() {
-    this.bullet.setActive(false).setVisible(false);
+function disappearBullet() {
+    bullet.setActive(false).setVisible(false);
 }
