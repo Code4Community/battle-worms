@@ -5,12 +5,63 @@
     <title>Making your first Phaser 3 Game - Part 10</title>
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <script defer src="./script.js"></script>
+    <script>
+        function download(){
+            var text = document.getElementById("my-textarea").value;
+            text = text.replace(/\n/g, "\r\n"); // To retain the Line breaks.
+            var blob = new Blob([text], { type: "text/plain"});
+            var anchor = document.createElement("a");
+            anchor.download = "codeFile.txt";
+            anchor.href = window.URL.createObjectURL(blob);
+            anchor.target ="_blank";
+            anchor.style.display = "none"; // just to be safe!
+            document.body.appendChild(anchor);
+            anchor.click();
+            document.body.removeChild(anchor);
+        }
+
+        function readTextFile(file)
+        {
+            var rawFile = new XMLHttpRequest();
+            rawFile.open("GET", file, false);
+            rawFile.onreadystatechange = function ()
+            {
+                if(rawFile.readyState === 4)
+                {
+                    if(rawFile.status === 200 || rawFile.status == 0)
+                    {
+                        var allText = rawFile.responseText;
+                        alert(allText);
+                        print("Hello");
+                    }
+                }
+            }
+            rawFile.send(null);
+        }
+
+
+    </script>
     <style type="text/css">
         body {
             margin: 0;
         }
+        div {
+            border: 1px solid black;
+            background-color: #ffffff;
+            padding-top: 0px;
+            
+            padding-left: 0px;
+            padding-bottom: 0px;
+            
+        }
+        
     </style>
 </head>
+<p>Code: </p>
+<div><textarea id="my-textarea"></textarea>
+ <button type="button" onclick="download()">Save</button></div>
+
+ <div><button type="button2" onclick="readTextFile(file)">Run</button></div>
 <body>
 </body>
 </html>
