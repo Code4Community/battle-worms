@@ -31,10 +31,23 @@ var game = new Phaser.Game(config);
 class Entity extends Phaser.GameObjects.Sprite {
     constructor(scene,x,y) {
         super(scene,x,y);
+        this.setPosition(x,y);
+        scene.physics.add.existing(this);
+        //this.setBounce(0.2);
+        //this.setCollideWorldBounds(true);
+        scene.physics.add.collider(this, platforms);
     }
 
     // need to make move() function a Entity function
+    moveLeft() {
+        this.setVelocityX(-160);
+        setTimeout(this.setVelocityX(0),2000);
+    }
 
+    moveRight() {
+        this.setVelocityX(160);
+        setTimeout(this.setVelocityX(0),2000);
+    }
 
     // need to make jump() function a Entity function
 
@@ -46,7 +59,6 @@ class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y);
         this.setTexture('astronautidle');
-        this.setPosition(x,y);
         this.name = "Astronaut "+index;
     }
 }
@@ -55,7 +67,6 @@ class Alien extends Entity {
     constructor(scene, x, y,index) {
         super(scene, x, y);
         this.setTexture('dude');
-        this.setPosition(x,y);
         this.name = "Alien "+index;
     }
 }
@@ -67,7 +78,7 @@ function preload ()
     this.load.image('star', 'assets/star.png');
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('astronautidle', 'assets/AstronautOrng (1).png', { frameWidth: 48, frameHeight: 48 });
+    this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
 }
 
 function create ()
@@ -90,6 +101,8 @@ function create ()
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
+    player.setSize(64, 64, true);
+    player.setScale(0.8, 0.8);
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -108,9 +121,17 @@ function create ()
         disappearBullet();
     }});
     
-    
-    var Ast = this.add.existing(new Astronaut(this,150,450,1));
+    astronauts = [];
+    astronautsTotal = 3;
+    astronautsLeft = 3;
+    for(i=0; i < astronautsTotal; i++) {
+        astronauts.push(this.add.existing(new Astronaut(this, 50 + (i * 50), 450, i)));
+    }
+
     var Ali = this.add.existing(new Alien(this,200,450,1));
+
+    
+
     
    
     // still need to kill bullet on hitting ground
@@ -128,7 +149,7 @@ function create ()
     this.anims.create({
         key: 'turn',
         frames: this.anims.generateFrameNumbers('astronautidle', { start: 0, end: 29 }),
-        frameRate: 5,
+        frameRate: 6,
         repeat: -1
     });
 
@@ -142,6 +163,8 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+    keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -191,13 +214,13 @@ function update ()
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
-
+        player.flipX=true;
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
-
+        player.flipX=false;
         player.anims.play('right', true);
     }
     else
@@ -214,6 +237,14 @@ function update ()
 
     if(spacebar.isDown) {
         fire();
+    }
+
+    if(keyL.isDown) {
+        Ast.moveLeft;
+    }
+
+    if(keyR.isDown) {
+        Ast.moveRight;
     }
 }
 
