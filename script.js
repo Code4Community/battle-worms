@@ -28,12 +28,13 @@ var bullet;
 
 var game = new Phaser.Game(config);
 
-class Entity {
-    constructor(index, game) {
-        this.game = game;
+class Entity extends Phaser.GameObjects.Sprite {
+    constructor(scene,x,y) {
+        super(scene,x,y);
     }
 
     // need to make move() function a Entity function
+
 
     // need to make jump() function a Entity function
 
@@ -42,15 +43,19 @@ class Entity {
 }
 
 class Astronaut extends Entity {
-    constructor(index, game) {
-        super(game);
+    constructor(scene, x, y, index) {
+        super(scene, x, y);
+        this.setTexture('astronautidle');
+        this.setPosition(x,y);
         this.name = "Astronaut "+index;
     }
 }
 
 class Alien extends Entity {
-    constructor(index) {
-        super();
+    constructor(scene, x, y,index) {
+        super(scene, x, y);
+        this.setTexture('dude');
+        this.setPosition(x,y);
         this.name = "Alien "+index;
     }
 }
@@ -104,7 +109,10 @@ function create ()
     }});
     
     
-    var Astronaut = new Astronaut(0, this.game);
+    var Ast = this.add.existing(new Astronaut(this,150,450,1));
+    var Ali = this.add.existing(new Alien(this,200,450,1));
+    
+   
     // still need to kill bullet on hitting ground
     // bullet.checkWorldBounds = true;
 
