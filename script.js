@@ -223,7 +223,7 @@ function fire() {
         this.bullet.setPosition(this.player.x, this.player.y);
         bullet.setActive(true).setVisible(true);
 
-        this.bullet.setVelocityX(100);
+        this.bullet.setVelocityX(-100);
         this.bullet.setVelocityY(-500);
 }
 
