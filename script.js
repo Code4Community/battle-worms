@@ -34,6 +34,15 @@ class Entity extends Phaser.GameObjects.Sprite {
     }
 
     // need to make move() function a Entity function
+    moveLeft() {
+        this.setVelocityX(-160);
+        setTimeout(this.setVelocityX(0),2000);
+    }
+
+    moveRight() {
+        this.setVelocityX(160);
+        setTimeout(this.setVelocityX(0),2000);
+    }
 
 
     // need to make jump() function a Entity function
@@ -111,6 +120,9 @@ function create ()
     
     var Ast = this.add.existing(new Astronaut(this,150,450,1));
     var Ali = this.add.existing(new Alien(this,200,450,1));
+
+    
+
     
    
     // still need to kill bullet on hitting ground
@@ -142,6 +154,8 @@ function create ()
     //  Input Events
     cursors = this.input.keyboard.createCursorKeys();
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
+    keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
+    keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -214,6 +228,14 @@ function update ()
 
     if(spacebar.isDown) {
         fire();
+    }
+
+    if(keyL.isDown) {
+        Ast.moveLeft;
+    }
+
+    if(keyR.isDown) {
+        Ast.moveRight;
     }
 }
 
