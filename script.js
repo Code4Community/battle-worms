@@ -78,7 +78,7 @@ function preload ()
     this.load.image('star', 'assets/star.png');
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
-    this.load.spritesheet('astronautidle', 'assets/AstronautOrng (1).png', { frameWidth: 48, frameHeight: 48 });
+    this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
 }
 
 function create ()
@@ -101,6 +101,8 @@ function create ()
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
+    player.setSize(64, 64, true);
+    player.setScale(0.8, 0.8);
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -147,7 +149,7 @@ function create ()
     this.anims.create({
         key: 'turn',
         frames: this.anims.generateFrameNumbers('astronautidle', { start: 0, end: 29 }),
-        frameRate: 5,
+        frameRate: 6,
         repeat: -1
     });
 
@@ -212,13 +214,13 @@ function update ()
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
-
+        player.flipX=true;
         player.anims.play('left', true);
     }
     else if (cursors.right.isDown)
     {
         player.setVelocityX(160);
-
+        player.flipX=false;
         player.anims.play('right', true);
     }
     else
