@@ -31,10 +31,14 @@ var game = new Phaser.Game(config);
 class Entity extends Phaser.GameObjects.Sprite {
     constructor(scene,x,y) {
         super(scene,x,y);
+        this.setPosition(x,y);
+        scene.physics.add.existing(this);
+        //this.setBounce(0.2);
+        //this.setCollideWorldBounds(true);
+        scene.physics.add.collider(this, platforms);
     }
 
     // need to make move() function a Entity function
-
 
     // need to make jump() function a Entity function
 
@@ -46,7 +50,6 @@ class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y);
         this.setTexture('astronautidle');
-        this.setPosition(x,y);
         this.name = "Astronaut "+index;
     }
 }
@@ -55,7 +58,6 @@ class Alien extends Entity {
     constructor(scene, x, y,index) {
         super(scene, x, y);
         this.setTexture('dude');
-        this.setPosition(x,y);
         this.name = "Alien "+index;
     }
 }
@@ -108,8 +110,13 @@ function create ()
         disappearBullet();
     }});
     
-    
-    var Ast = this.add.existing(new Astronaut(this,150,450,1));
+    astronauts = [];
+    astronautsTotal = 3;
+    astronautsLeft = 3;
+    for(i=0; i < astronautsTotal; i++) {
+        astronauts.push(this.add.existing(new Astronaut(this, 50 + (i * 50), 450, i)));
+    }
+
     var Ali = this.add.existing(new Alien(this,200,450,1));
     
    
