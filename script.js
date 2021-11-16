@@ -28,6 +28,33 @@ var bullet;
 
 var game = new Phaser.Game(config);
 
+class Entity {
+    constructor(index, game) {
+        this.game = game;
+    }
+
+    // need to make move() function a Entity function
+
+    // need to make jump() function a Entity function
+
+    // need to make fire() function a Entity function
+
+}
+
+class Astronaut extends Entity {
+    constructor(index, game) {
+        super(game);
+        this.name = "Astronaut "+index;
+    }
+}
+
+class Alien extends Entity {
+    constructor(index) {
+        super();
+        this.name = "Alien "+index;
+    }
+}
+
 function preload ()
 {
     this.load.image('sky', 'assets/nightsky.png');
@@ -75,6 +102,8 @@ function create ()
         disappearBullet();
     }});
     
+    
+    var Astronaut = new Astronaut(0, this.game);
     // still need to kill bullet on hitting ground
     // bullet.checkWorldBounds = true;
 
