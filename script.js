@@ -62,6 +62,7 @@ function preload ()
     this.load.image('star', 'assets/star.png');
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.spritesheet('astronautidle', 'assets/AstronautOrng (1).png', { frameWidth: 48, frameHeight: 48 });
 }
 
 function create ()
@@ -83,7 +84,7 @@ function create ()
     platforms.create(750, 220, 'ground');
 
     // The player and its settings
-    player = this.physics.add.sprite(100, 450, 'dude');
+    player = this.physics.add.sprite(100, 400, 'dude');
 
     //  Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
@@ -111,21 +112,22 @@ function create ()
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
         key: 'left',
-        frames: this.anims.generateFrameNumbers('dude', { start: 0, end: 3 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNumbers('astronautidle', { start: 0, end: 29 }),
+        frameRate: 5,
         repeat: -1
     });
 
     this.anims.create({
         key: 'turn',
-        frames: [ { key: 'dude', frame: 4 } ],
-        frameRate: 20
+        frames: this.anims.generateFrameNumbers('astronautidle', { start: 0, end: 29 }),
+        frameRate: 5,
+        repeat: -1
     });
 
     this.anims.create({
         key: 'right',
-        frames: this.anims.generateFrameNumbers('dude', { start: 5, end: 8 }),
-        frameRate: 10,
+        frames: this.anims.generateFrameNumbers('astronautidle', { start: 0, end: 29 }),
+        frameRate: 5,
         repeat: -1
     });
 
@@ -194,7 +196,7 @@ function update ()
     {
         player.setVelocityX(0);
 
-        player.anims.play('turn');
+        player.anims.play('turn', true);
     }
 
     if (cursors.up.isDown && player.body.touching.down)
@@ -252,7 +254,7 @@ function fire() {
         this.bullet.setPosition(this.player.x, this.player.y);
         bullet.setActive(true).setVisible(true);
 
-        this.bullet.setVelocityX(100);
+        this.bullet.setVelocityX(-100);
         this.bullet.setVelocityY(-500);
 }
 
