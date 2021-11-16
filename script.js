@@ -39,15 +39,6 @@ class Entity extends Phaser.GameObjects.Sprite {
     }
 
     // need to make move() function a Entity function
-    moveLeft() {
-        this.setVelocityX(-160);
-        setTimeout(this.setVelocityX(0),2000);
-    }
-
-    moveRight() {
-        this.setVelocityX(160);
-        setTimeout(this.setVelocityX(0),2000);
-    }
 
     // need to make jump() function a Entity function
 
@@ -69,6 +60,16 @@ class Alien extends Entity {
         this.setTexture('dude');
         this.name = "Alien "+index;
     }
+}
+
+Entity.prototype.moveLeft = function() {
+    this.setVelocityX(-160);
+    setTimeout(this.setVelocityX(0),2000);
+}
+
+Entity.prototype.moveRight = function() {
+    this.setVelocityX(160);
+    setTimeout(this.setVelocityX(0),2000);
 }
 
 function preload ()
@@ -127,6 +128,12 @@ function create ()
     }
 
     var Ali = this.add.existing(new Alien(this,200,450,1));
+    aliens = [];
+    aliensTotal = 3;
+    aliensLeft = 3;
+    for(i=0; i < aliensTotal; i++) {
+        aliens.push(this.add.existing(new Alien(this, 200 + (i * 50), 450, i)));
+    }
 
     
 
@@ -238,11 +245,11 @@ function update ()
     }
 
     if(keyL.isDown) {
-        Ast.moveLeft;
+        astronauts[0].moveLeft();
     }
 
     if(keyR.isDown) {
-        Ast.moveRight;
+        astronauts[1].moveRight();
     }
 }
 
