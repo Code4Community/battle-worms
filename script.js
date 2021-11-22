@@ -28,13 +28,13 @@ var bullet;
 
 var game = new Phaser.Game(config);
 
-class Entity extends Phaser.GameObjects.Sprite {
-    constructor(scene,x,y) {
-        super(scene,x,y);
-        this.setPosition(x,y);
+class Entity extends Phaser.Physics.Arcade.Sprite {
+    constructor(scene, x, y, sprite) {
+        super(scene, x, y, sprite);
+        scene.add.existing(this);
         scene.physics.add.existing(this);
-        //this.setBounce(0.2);
-        //this.setCollideWorldBounds(true);
+        this.setBounce(0.2);
+        this.setCollideWorldBounds(true);
         scene.physics.add.collider(this, platforms);
     }
 
@@ -48,28 +48,39 @@ class Entity extends Phaser.GameObjects.Sprite {
 
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
-        super(scene, x, y);
-        this.setTexture('astronautidle');
+        super(scene, x, y, 'astronautidle');
         this.name = "Astronaut "+index;
     }
 }
 
 class Alien extends Entity {
-    constructor(scene, x, y,index) {
-        super(scene, x, y);
-        this.setTexture('dude');
+    constructor(scene, x, y, index) {
+        super(scene, x, y, 'dude');
         this.name = "Alien "+index;
     }
 }
 
 Entity.prototype.moveLeft = function() {
     this.setVelocityX(-160);
-    setTimeout(this.setVelocityX(0),2000);
+    /*
+        Next few lines change velocity back to zero after 2 seconds.
+        Written this way because the first parameter has to be a function object, not a function's return value.
+        Same goes for moveRight.
+        - Carter
+        p.s. if this doesn't actually work idk what to say.
+    */
+   var that = this;
+    setTimeout(function() {
+        that.setVelocityX(0);
+    }, 2000);
 }
 
 Entity.prototype.moveRight = function() {
     this.setVelocityX(160);
-    setTimeout(this.setVelocityX(0),2000);
+    var that = this;
+    setTimeout(function() {
+        that.setVelocityX(0);
+    }, 2000);
 }
 
 function preload ()
@@ -126,15 +137,14 @@ function create ()
     astronautsTotal = 3;
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
-        astronauts.push(this.add.existing(new Astronaut(this, 50 + (i * 50), 450, i)));
+        astronauts.push(new Astronaut(this, 50 + (i * 50), 450, i));
     }
 
-    var Ali = this.add.existing(new Alien(this,200,450,1));
     aliens = [];
     aliensTotal = 3;
     aliensLeft = 3;
     for(i=0; i < aliensTotal; i++) {
-        aliens.push(this.add.existing(new Alien(this, 200 + (i * 50), 450, i)));
+        aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
 
     
