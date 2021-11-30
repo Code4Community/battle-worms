@@ -62,7 +62,7 @@ class Astronaut extends Entity {
 
 class Alien extends Entity {
     constructor(scene, x, y, index) {
-        super(scene, x, y, 'dude', index);
+        super(scene, x, y, 'alienidle', index);
         index++;
         this.name = "Alien "+index;
     }
@@ -106,6 +106,7 @@ function preload ()
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
     this.load.image('num2', 'assets/numbers/number2.png');
     this.load.image('num3', 'assets/numbers/number3.png');
