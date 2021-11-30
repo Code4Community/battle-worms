@@ -31,13 +31,19 @@ var rover;
 var game = new Phaser.Game(config);
 
 class Entity extends Phaser.Physics.Arcade.Sprite {
-    constructor(scene, x, y, sprite) {
+    constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
-        this.setBounce(0.2);
+        this.setScale(0.8, 0.8);
+        this.setBounce(0.001);
         this.setCollideWorldBounds(true);
         scene.physics.add.collider(this, platforms);
+        // creates number sprites above heads of Entity objects
+        index++;
+        this.headNumber = scene.physics.add.sprite(this.x, this.y - 10, 'num'+index);
+        this.headNumber.body.allowGravity = false;
+        this.headNumber.setScale(1.5);
     }
 
     // need to make move() function a Entity function
@@ -50,18 +56,20 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
 
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
-        super(scene, x, y, 'astronautidle');
+        super(scene, x, y, 'astronautidle', index);
+        index++;
         this.name = "Astronaut "+index;
     }
 }
 
 class Alien extends Entity {
     constructor(scene, x, y, index) {
-        super(scene, x, y, 'dude');
+        super(scene, x, y, 'dude', index);
+        index++;
         this.name = "Alien "+index;
     }
 }
-
+// Still need to add animations for moveLeft and moveRight
 Entity.prototype.moveLeft = function() {
     this.setVelocityX(-160);
     /*
@@ -69,7 +77,6 @@ Entity.prototype.moveLeft = function() {
         Written this way because the first parameter has to be a function object, not a function's return value.
         Same goes for moveRight.
         - Carter
-        p.s. if this doesn't actually work idk what to say.
     */
    var that = this;
     setTimeout(function() {
@@ -85,6 +92,14 @@ Entity.prototype.moveRight = function() {
     }, 2000);
 }
 
+// need to add x and y velocity inputs
+Entity.prototype.fire = function() {
+    bullet.setPosition(this.x, this.y);
+    bullet.setActive(true).setVisible(true);
+    bullet.setVelocityX(-100);
+    bullet.setVelocityY(-500);
+}
+
 function preload ()
 {
     this.load.image('sky', 'assets/nightsky.png');
@@ -95,6 +110,9 @@ function preload ()
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
+    this.load.image('num1', 'assets/numbers/number1.png');
+    this.load.image('num2', 'assets/numbers/number2.png');
+    this.load.image('num3', 'assets/numbers/number3.png');
 }
 
 function create ()
@@ -155,11 +173,10 @@ function create ()
     for(i=0; i < aliensTotal; i++) {
         aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
-
    
+
     // still need to kill bullet on hitting ground
     // bullet.checkWorldBounds = true;
-
 
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
@@ -188,6 +205,7 @@ function create ()
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
     keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
+    keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -228,6 +246,14 @@ function create ()
 
 function update ()
 {
+    for(i = 0; i < astronautsLeft; i++) {
+        astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
+    }
+
+    for(i = 0; i < aliensLeft; i++) {
+        aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
+    }
+
     if (gameOver)
     {
         return;
@@ -267,6 +293,10 @@ function update ()
 
     if(keyR.isDown) {
         astronauts[1].moveRight();
+    }
+
+    if(keyF.isDown) {
+        astronauts[2].fire();
     }
 }
 
@@ -310,6 +340,7 @@ function collectStar (player, star)
 }*/
 
 // fires the bullet from the player
+// this function is not necessary for final game, just test shooting from player
 function fire() {
 
         this.bullet.setPosition(this.player.x, this.player.y);
