@@ -25,6 +25,8 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 var bullet;
+var asteroid;
+var rover;
 
 var game = new Phaser.Game(config);
 
@@ -103,6 +105,8 @@ function preload ()
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('star', 'assets/star.png');
+    this.load.image('asteroid', 'assets/asteroid.png');
+    this.load.image('rover', 'assets/Rover.jpg')
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
@@ -119,6 +123,9 @@ function create ()
 
     //  The platforms group contains the ground and the 2 ledges we can jump on
     platforms = this.physics.add.staticGroup();
+    asteroid  = this.physics.add.staticGroup();
+    rover     = this.physics.add.staticGroup();
+    
 
     //  Here we create the ground.
     //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
@@ -128,6 +135,8 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+    asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
+    rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
@@ -164,7 +173,8 @@ function create ()
     for(i=0; i < aliensTotal; i++) {
         aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
-    
+   
+
     // still need to kill bullet on hitting ground
     // bullet.checkWorldBounds = true;
 
@@ -220,6 +230,8 @@ function create ()
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bullet, platforms);
+    this.physics.add.collider(player, asteroid);
+    this.physics.add.collider(player, rover);
     //this.physics.add.collider(bombs, platforms);
 
     //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
