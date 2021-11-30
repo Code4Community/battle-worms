@@ -16,6 +16,7 @@ var config = {
     }
 };
 
+//Define Variables
 var player;
 var stars;
 //var bombs;
@@ -30,6 +31,7 @@ var rover;
 
 var game = new Phaser.Game(config);
 
+//Enitity class that deinfes movement of the players and enemies
 class Entity extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
@@ -54,6 +56,7 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
 
 }
 
+//Astronuats are the players
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'astronautidle', index);
@@ -62,6 +65,7 @@ class Astronaut extends Entity {
     }
 }
 
+//Aliens are the enemies
 class Alien extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'dude', index);
@@ -102,6 +106,7 @@ Entity.prototype.fire = function() {
 
 function preload ()
 {
+    // Load all of the images and assign a name to them
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('star', 'assets/star.png');
@@ -121,17 +126,16 @@ function create ()
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
-    //  The platforms group contains the ground and the 2 ledges we can jump on
+    //Define Static Groups
     platforms = this.physics.add.staticGroup();
     asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
     
 
-    //  Here we create the ground.
-    //  Scale it to fit the width of the game (the original sprite is 400x32 in size)
+    // Here we create the ground.
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
 
-    //  Now let's create some ledges
+    // Place our static images on the screen
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
@@ -143,14 +147,13 @@ function create ()
     player.setSize(64, 64, true);
     player.setScale(0.8, 0.8);
 
-    //  Player physics properties. Give the little guy a slight bounce.
+    // Player physics properties. Give the little guy a slight bounce.
     player.setBounce(0.2);
     player.setCollideWorldBounds(true);
 
-    // bullet physics and properties
+    // Bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
     disappearBullet();
-    //bullet.setCollideWorldBounds(true);
     bullet.body.collideWorldBounds = true;
     bullet.body.onWorldBounds = true;
 
@@ -223,18 +226,19 @@ function create ()
 
     //bombs = this.physics.add.group();
 
-    //  The score
+    // The score
     scoreText = this.add.text(16, 16, 'Aliens: 0', { fontSize: '32px', fill: '#FFFFFF' });
 
-    //  Collide the player and the stars with the platforms
+    // Collide the player and the stars with the platforms
     this.physics.add.collider(player, platforms);
     this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bullet, platforms);
     this.physics.add.collider(player, asteroid);
     this.physics.add.collider(player, rover);
+    this.physics.add.collider(player, bullet);
     //this.physics.add.collider(bombs, platforms);
 
-    //  Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
+    // Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
     this.physics.add.overlap(player, stars, collectStar, null, this);
 
     //this.physics.add.collider(player, bombs, hitBomb, null, this);
