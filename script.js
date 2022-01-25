@@ -31,16 +31,20 @@ var rover;
 
 var game = new Phaser.Game(config);
 
-//Enitity class that deinfes movement of the players and enemies
+//Enitity class that defines movement of the players and enemies
 class Entity extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setScale(0.8, 0.8);
-        this.setBounce(0.001);
+        this.setBounce(0.1);
         this.setCollideWorldBounds(true);
         scene.physics.add.collider(this, platforms);
+
+        // isJumping is true when the player is jumping
+        var isJumping = false;
+
         // creates number sprites above heads of Entity objects
         index++;
         this.headNumber = scene.physics.add.sprite(this.x, this.y - 10, 'num'+index);
@@ -75,7 +79,7 @@ class Alien extends Entity {
 }
 // Still need to add animations for moveLeft and moveRight
 Entity.prototype.moveLeft = function() {
-    this.setVelocityX(-160);
+    this.setVelocityX(-140);
     /*
         Next few lines change velocity back to zero after 2 seconds.
         Written this way because the first parameter has to be a function object, not a function's return value.
@@ -89,11 +93,27 @@ Entity.prototype.moveLeft = function() {
 }
 
 Entity.prototype.moveRight = function() {
-    this.setVelocityX(160);
+    this.setVelocityX(140);
     var that = this;
     setTimeout(function() {
         that.setVelocityX(0);
     }, 2000);
+}
+
+Entity.prototype.jumpLeft = function() {
+    if(this.body.touching.down) {
+        this.setVelocityY(-300);
+        this.moveLeft();
+        this.isJumping = true;
+    }
+}
+
+Entity.prototype.jumpRight = function() {
+    if(this.body.touching.down) {
+        this.setVelocityY(-300);
+        this.setVelocityX(140);
+        this.isJumping = true;
+    }
 }
 
 // need to add x and y velocity inputs
@@ -210,6 +230,8 @@ function create ()
     keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
     keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
+    keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+    keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
 
     //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
     stars = this.physics.add.group({
@@ -259,6 +281,19 @@ function update ()
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
 
+    for(i = 0; i < aliensTotal; i++) {
+        if(aliens[i].isJumping && aliens[i].body.touching.down) {
+            aliens[i].isJumping = false;
+            aliens[i].setVelocity(0);
+        }
+    }
+    for(i = 0; i < astronautsTotal; i++) {
+        if(astronauts[i].isJumping && astronauts[i].body.touching.down) {
+            astronauts[i].isJumping = false;
+            astronauts[i].setVelocity(0);
+        }
+    }
+
     if (gameOver)
     {
         return;
@@ -303,6 +338,15 @@ function update ()
     if(keyF.isDown) {
         astronauts[2].fire();
     }
+
+    if(keyJ.isDown) {
+        aliens[0].jumpLeft();
+    }
+
+    if(keyK.isDown) {
+        aliens[1].jumpRight();
+    }
+
 }
 
 function collectStar (player, star)
