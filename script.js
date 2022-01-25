@@ -31,21 +31,21 @@ var rover;
 
 var game = new Phaser.Game(config);
 
-//Enitity class that defines movement of the players and enemies
+// Enitity class that defines movement of the players and enemies
 class Entity extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setScale(0.8, 0.8);
-        this.setBounce(0.1);
+        this.setBounce(0.3);
         this.setCollideWorldBounds(true);
         scene.physics.add.collider(this, platforms);
 
-        // isJumping is true when the player is jumping
+        // isJumping is true when the player is jumping.
         var isJumping = false;
 
-        // creates number sprites above heads of Entity objects
+        // Creates number sprites above heads of Entity objects.
         index++;
         this.headNumber = scene.physics.add.sprite(this.x, this.y - 10, 'num'+index);
         this.headNumber.body.allowGravity = false;
@@ -54,7 +54,7 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
 
 }
 
-//Astronuats are the players
+// Astronuats are the players.
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'astronautidle', index);
@@ -63,7 +63,7 @@ class Astronaut extends Entity {
     }
 }
 
-//Aliens are the enemies
+// Aliens are the computer-controlled enemies.
 class Alien extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'alienidle', index);
@@ -71,7 +71,7 @@ class Alien extends Entity {
         this.name = "Alien "+index;
     }
 }
-// Still need to add animations for moveLeft and moveRight
+// Still need to add animations for moveLeft and moveRight.
 Entity.prototype.moveLeft = function() {
     this.setVelocityX(-140);
     /*
@@ -110,7 +110,7 @@ Entity.prototype.jumpRight = function() {
     }
 }
 
-// need to add x and y velocity inputs
+// Need to add x and y velocity inputs.
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
     bullet.setActive(true).setVisible(true);
@@ -141,7 +141,7 @@ function create ()
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
-    //Define Static Groups
+    // Define Static Groups
     platforms = this.physics.add.staticGroup();
     asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
@@ -193,7 +193,8 @@ function create ()
     }
    
 
-    // still need to kill bullet on hitting ground
+    // Still need to kill bullet on hitting ground.
+    // Only want to kill bullet if the bottom of it is touching a platform.
     // bullet.checkWorldBounds = true;
 
     //  Our player animations, turning, walking left and walking right.
@@ -275,12 +276,18 @@ function update ()
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
 
+    // Checks if any of the aliens are in process of jumping.
+    // If they have started jump and are touching ground,
+    // the jump is over and they stop moving in X direction.
     for(i = 0; i < aliensTotal; i++) {
         if(aliens[i].isJumping && aliens[i].body.touching.down) {
             aliens[i].isJumping = false;
             aliens[i].setVelocity(0);
         }
     }
+    // Checks if any of the astronauts are in process of jumping.
+    // If they have started jump and are touching ground,
+    // the jump is over and they stop moving in X direction.
     for(i = 0; i < astronautsTotal; i++) {
         if(astronauts[i].isJumping && astronauts[i].body.touching.down) {
             astronauts[i].isJumping = false;
@@ -293,6 +300,7 @@ function update ()
         return;
     }
 
+    // Current cursor and key prompts are only in to test functions
     if (cursors.left.isDown)
     {
         player.setVelocityX(-160);
@@ -382,7 +390,7 @@ function collectStar (player, star)
     gameOver = true;
 }*/
 
-// fires the bullet from the player
+// Fires the bullet from the player.
 // this function is not necessary for final game, just test shooting from player
 function fire() {
 
