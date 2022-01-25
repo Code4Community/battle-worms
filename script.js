@@ -17,9 +17,6 @@ var config = {
 };
 
 //Define Variables
-var player;
-var stars;
-//var bombs;
 var platforms;
 var cursors;
 var score = 0;
@@ -123,11 +120,8 @@ function preload ()
     // Load all of the images and assign a name to them
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
-    this.load.image('star', 'assets/star.png');
     this.load.image('asteroid', 'assets/asteroid.png');
-    this.load.image('rover', 'assets/Rover.jpg')
-//  this.load.image('bomb', 'assets/bomb.png');   
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('rover', 'assets/Rover.jpg') 
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
@@ -157,15 +151,6 @@ function create ()
     asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
     rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
-    // The player and its settings
-    player = this.physics.add.sprite(100, 400, 'dude');
-    player.setSize(64, 64, true);
-    player.setScale(0.8, 0.8);
-
-    // Player physics properties. Give the little guy a slight bounce.
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
-
     // Bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
     disappearBullet();
@@ -191,11 +176,6 @@ function create ()
     for(i=0; i < aliensTotal; i++) {
         aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
-   
-
-    // Still need to kill bullet on hitting ground.
-    // Only want to kill bullet if the bottom of it is touching a platform.
-    // bullet.checkWorldBounds = true;
 
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
@@ -228,42 +208,13 @@ function create ()
     keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
     keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
 
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    stars.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
-
     //bombs = this.physics.add.group();
 
     // The score
     scoreText = this.add.text(16, 16, 'Aliens: 0', { fontSize: '32px', fill: '#FFFFFF' });
 
     // Collide the player and the stars with the platforms
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bullet, platforms);
-    this.physics.add.collider(player, asteroid);
-    this.physics.add.collider(player, rover);
-    this.physics.add.collider(player, bullet);
-    //this.physics.add.collider(bombs, platforms);
-
-    // Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
-
-    //this.physics.add.collider(player, bombs, hitBomb, null, this);
-
-    //this.physics.add.collider(bullet, stars, bulletHitEdge, null, this);
-    
-    //this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
 function update ()
@@ -300,35 +251,6 @@ function update ()
         return;
     }
 
-    // Current cursor and key prompts are only in to test functions
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        player.flipX=true;
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        player.flipX=false;
-        player.anims.play('right', true);
-    }
-    else
-    {
-        player.setVelocityX(0);
-
-        player.anims.play('turn', true);
-    }
-
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-    }
-
-    if(spacebar.isDown) {
-        fire();
-    }
-
     if(keyL.isDown) {
         astronauts[0].moveLeft();
     }
@@ -349,56 +271,6 @@ function update ()
         aliens[1].jumpRight();
     }
 
-}
-
-function collectStar (player, star)
-{
-    star.disableBody(true, true);
-
-    //  Add and update the score
-    score += 1;
-    scoreText.setText('Aliens: ' + score);
-
-    if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-
-            child.enableBody(true, child.x, 0, true, true);
-
-        });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        //var bomb = bombs.create(x, 16, 'bomb');
-        //bomb.setBounce(1);
-        //bomb.setCollideWorldBounds(true);
-        //bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        //bomb.allowGravity = false;
-
-    }
-}
-
-/*function hitBomb (player, bomb)
-{
-    this.physics.pause();
-
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    gameOver = true;
-}*/
-
-// Fires the bullet from the player.
-// this function is not necessary for final game, just test shooting from player
-function fire() {
-
-        this.bullet.setPosition(this.player.x, this.player.y);
-        bullet.setActive(true).setVisible(true);
-
-        this.bullet.setVelocityX(-100);
-        this.bullet.setVelocityY(-500);
 }
 
 function disappearBullet() {
