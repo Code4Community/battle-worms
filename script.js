@@ -52,12 +52,6 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
         this.headNumber.setScale(1.5);
     }
 
-    // need to make move() function a Entity function
-
-    // need to make jump() function a Entity function
-
-    // need to make fire() function a Entity function
-
 }
 
 //Astronuats are the players
@@ -103,7 +97,7 @@ Entity.prototype.moveRight = function() {
 Entity.prototype.jumpLeft = function() {
     if(this.body.touching.down) {
         this.setVelocityY(-300);
-        this.moveLeft();
+        this.setVelocityX(-140);
         this.isJumping = true;
     }
 }
