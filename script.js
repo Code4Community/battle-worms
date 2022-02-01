@@ -272,6 +272,10 @@ function update ()
         }
     }
 
+    if(bullet.body.touching.down) {
+        disappearBullet();
+    }
+
     /*
     Checks if its astronauts' turn or aliens' turn.
     */
