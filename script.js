@@ -25,6 +25,10 @@ var scoreText;
 var bullet;
 var asteroid;
 var rover;
+// astroTurn is true if it's the player's turn.
+var astroTurn;
+// allStopped is true if all Entitiy's have velocity zero.
+var allStopped;
 
 var game = new Phaser.Game(config);
 
@@ -107,7 +111,7 @@ Entity.prototype.jumpRight = function() {
     }
 }
 
-// Need to add x and y velocity inputs.
+// Need to add X and Y velocity inputs.
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
     bullet.setActive(true).setVisible(true);
@@ -162,11 +166,15 @@ function create ()
         if(up || down || left || right) {
         disappearBullet();
     }});
-    
+
+    // It is the player's turn first.
+    astroTurn = true;
+
     astronauts = [];
     astronautsTotal = 3;
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
+        // Here is where we decide where Astronouts start
         astronauts.push(new Astronaut(this, 50 + (i * 50), 450, i));
     }
 
@@ -174,6 +182,7 @@ function create ()
     aliensTotal = 3;
     aliensLeft = 3;
     for(i=0; i < aliensTotal; i++) {
+        // Here is where we decide where Aliens start.
         aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
 
@@ -219,31 +228,68 @@ function create ()
 
 function update ()
 {
+    /*
+    Keeps the numbers over the heads of the astronauts and aliens.
+    */
     for(i = 0; i < astronautsLeft; i++) {
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
-
     for(i = 0; i < aliensLeft; i++) {
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
+    
+    /*
+    Sets boolean allStopped if all the aliens and astronauts are not moving.
+    */
+    for(i = 0; i < aliensTotal; i++) {
+        allStopped = allStopped && (aliens[i].body.velocity() == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
+    }
 
-    // Checks if any of the aliens are in process of jumping.
-    // If they have started jump and are touching ground,
-    // the jump is over and they stop moving in X direction.
+    /*
+    Checks if any of the aliens are in process of jumping.
+    If they have started jump and are touching ground,
+    the jump is over and they stop moving in X direction.
+    */
     for(i = 0; i < aliensTotal; i++) {
         if(aliens[i].isJumping && aliens[i].body.touching.down) {
             aliens[i].isJumping = false;
             aliens[i].setVelocity(0);
         }
     }
-    // Checks if any of the astronauts are in process of jumping.
-    // If they have started jump and are touching ground,
-    // the jump is over and they stop moving in X direction.
+    /*  
+    Checks if any of the astronauts are in process of jumping.
+    If they have started jump and are touching ground,
+    the jump is over and they stop moving in X direction.
+    */
     for(i = 0; i < astronautsTotal; i++) {
         if(astronauts[i].isJumping && astronauts[i].body.touching.down) {
             astronauts[i].isJumping = false;
             astronauts[i].setVelocity(0);
         }
+    }
+
+    /*
+    Checks if its astronauts' turn or aliens' turn.
+    */
+    if(astroTurn) {
+
+        // Code for when it is player's turn!
+
+        astroTurn = false;
+    } else {
+        /*
+        Checks that everything is still and then runs next action of the aliens.
+        Aliens take three actions.
+        */
+        while(!allStopped && (bullet.body.velocity == 0));
+        alien[0].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        alien[1].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        alien[2].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        astroTurn = true;
     }
 
     if (gameOver)
