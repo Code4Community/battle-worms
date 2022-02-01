@@ -121,7 +121,8 @@ function preload ()
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('asteroid', 'assets/asteroid.png');
-    this.load.image('rover', 'assets/Rover.jpg') 
+    this.load.image('rover', 'assets/Rover.jpg');
+    this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
@@ -148,7 +149,7 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
-    asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
+    asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
     rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
     // Bullet physics and properties
