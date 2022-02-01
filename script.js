@@ -165,6 +165,8 @@ function create ()
         if(up || down || left || right) {
         disappearBullet();
     }});
+
+
     
     astronauts = [];
     astronautsTotal = 3;
@@ -249,6 +251,10 @@ function update ()
         }
     }
 
+    if(bullet.body.touching.down)
+    {
+        disappearBullet();
+    }
     if (gameOver)
     {
         return;
@@ -263,7 +269,7 @@ function update ()
     }
 
     if(keyF.isDown) {
-        astronauts[2].fire();
+        astronauts[1].fire();
     }
 
     if(keyJ.isDown) {
