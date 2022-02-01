@@ -107,12 +107,38 @@ Entity.prototype.jumpRight = function() {
     }
 }
 
+
+
+
 // Need to add x and y velocity inputs.
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
     bullet.setActive(true).setVisible(true);
     bullet.setVelocityX(-100);
     bullet.setVelocityY(-500);
+}
+
+
+// An easy alien turn that chooses one of the five moves to do
+Alien.prototype.easyTurn = function() {
+    var min = 1;
+    var max = 6;
+    var myRand = Math.floor(Math.random * (max - min) + min);
+
+    switch(myRand) {
+        case 1:
+            this.moveLeft();
+        case 2:
+            this.moveRight();
+        case 3:
+            this.fire()
+        case 4:
+            this.jumpLeft;
+        case 5:
+            this.jumpRight;
+
+    }
+
 }
 
 function preload ()
