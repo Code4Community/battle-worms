@@ -149,6 +149,8 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+
+    // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
     asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
     rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
