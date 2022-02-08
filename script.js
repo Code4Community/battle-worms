@@ -112,7 +112,7 @@ function preload ()
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('star', 'assets/star.png');
     this.load.image('asteroid', 'assets/asteroid.png');
-    this.load.image('rover', 'assets/Rover.jpg')
+    this.load.image('Rover', 'assets/Rover.png')
 //  this.load.image('bomb', 'assets/bomb.png');   
     this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
@@ -142,7 +142,7 @@ function create ()
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
     asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
-    rover.create(700,350, 'rover').setScale(.1).refreshBody();
+    rover.create(700,340, 'Rover').setScale(.1).refreshBody();
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
