@@ -158,14 +158,14 @@ function preload ()
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('asteroid', 'assets/asteroid.png');
-    this.load.image('Rover', 'assets/Rover.png')
-    this.load.image('rover', 'assets/Rover.jpg');
+    this.load.image('Rover', 'assets/Rover.png');
     this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
     this.load.image('num2', 'assets/numbers/number2.png');
     this.load.image('num3', 'assets/numbers/number3.png');
+    this.load.image('Spaceship', 'assets/Spaceship.png');
 }
 
 function create ()
@@ -178,7 +178,7 @@ function create ()
     platforms = this.physics.add.staticGroup();
     asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
-    
+    Spaceship = this.physics.add.staticGroup();
 
     // Here we create the ground.
     platforms.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -189,6 +189,7 @@ function create ()
     platforms.create(750, 220, 'ground');
     asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
     rover.create(700,340, 'Rover').setScale(.1).refreshBody();
+    Spaceship.create(750,30, 'Spaceship').setScale(.1).refreshBody();
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
