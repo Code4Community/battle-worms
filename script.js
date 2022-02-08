@@ -1,7 +1,21 @@
+//Define Variables
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+var bullet;
+var asteroid;
+var rover;
+var screenWidth = 800;
+var screenHeight = 600;
+// astroTurn is true if it's the player's turn.
+var astroTurn;
+
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: screenWidth,
+    height: screenHeight,
     physics: {
         default: 'arcade',
         arcade: {
@@ -16,19 +30,6 @@ var config = {
     }
 };
 
-//Define Variables
-var platforms;
-var cursors;
-var score = 0;
-var gameOver = false;
-var scoreText;
-var bullet;
-var asteroid;
-var rover;
-// astroTurn is true if it's the player's turn.
-var astroTurn;
-// allStopped is true if all Entitiy's have velocity zero.
-var allStopped;
 
 var game = new Phaser.Game(config);
 
@@ -165,6 +166,7 @@ function preload ()
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('asteroid', 'assets/asteroid.png');
+    this.load.image('Rover', 'assets/Rover.png')
     this.load.image('rover', 'assets/Rover.jpg');
     this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
@@ -193,6 +195,13 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+    asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
+    rover.create(700,340, 'Rover').setScale(.1).refreshBody();
+
+    // The player and its settings
+    player = this.physics.add.sprite(100, 400, 'dude');
+    player.setSize(64, 64, true);
+    player.setScale(0.8, 0.8);
 
     // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
     asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
@@ -282,14 +291,6 @@ function update ()
     for(i = 0; i < aliensLeft; i++) {
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
-    
-    /*
-    Sets boolean allStopped if all the aliens and astronauts are not moving.
-    */
-    for(i = 0; i < aliensTotal; i++) {
-        allStopped = allStopped && (aliens[i].body.velocity() == 0);
-        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
-    }
 
     /*
     Checks if any of the aliens are in process of jumping.
@@ -331,14 +332,12 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        
-        while(!allStopped && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         astroTurn = true;
     }
 
@@ -371,4 +370,16 @@ function update ()
 
 function disappearBullet() {
     bullet.setActive(false).setVisible(false);
+}
+
+/*
+    Returns boolean that is true if all the aliens and astronauts are not moving.
+*/
+function allStopped(aliens, astronauts) {
+    var allStopped = true;
+    for(i = 0; i < aliensTotal; i++) {
+        allStopped = allStopped && (aliens[i].body.velocity == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity == 0);
+    }
+    return allStopped;
 }
