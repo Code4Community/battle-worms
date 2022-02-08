@@ -28,6 +28,7 @@ var rover;
 // astroTurn is true if it's the player's turn.
 var astroTurn;
 
+
 var game = new Phaser.Game(config);
 
 // Enitity class that defines movement of the players and enemies
@@ -155,6 +156,7 @@ function preload ()
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('asteroid', 'assets/asteroid.png');
+    this.load.image('Rover', 'assets/Rover.png')
     this.load.image('rover', 'assets/Rover.jpg');
     this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
@@ -183,6 +185,13 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+    asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
+    rover.create(700,340, 'Rover').setScale(.1).refreshBody();
+
+    // The player and its settings
+    player = this.physics.add.sprite(100, 400, 'dude');
+    player.setSize(64, 64, true);
+    player.setScale(0.8, 0.8);
 
     // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
     asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
