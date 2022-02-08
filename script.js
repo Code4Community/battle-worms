@@ -132,14 +132,20 @@ Alien.prototype.easyTurn = function() {
     switch(myRand) {
         case 1:
             this.moveLeft();
+            break;
         case 2:
             this.moveRight();
+            break;
         case 3:
-            this.fire()
+            this.fire();
+            break;
         case 4:
-            this.jumpLeft;
+            this.jumpLeft();
+            break;
         case 5:
-            this.jumpRight;
+            this.jumpRight();
+            break;
+         default:
 
     }
 
