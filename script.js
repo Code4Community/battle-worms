@@ -1,7 +1,21 @@
+//Define Variables
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+var bullet;
+var asteroid;
+var rover;
+var screenWidth = 800;
+var screenHeight = 600;
+// astroTurn is true if it's the player's turn.
+var astroTurn;
+
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: screenWidth,
+    height: screenHeight,
     physics: {
         default: 'arcade',
         arcade: {
@@ -15,18 +29,6 @@ var config = {
         update: update
     }
 };
-
-//Define Variables
-var platforms;
-var cursors;
-var score = 0;
-var gameOver = false;
-var scoreText;
-var bullet;
-var asteroid;
-var rover;
-// astroTurn is true if it's the player's turn.
-var astroTurn;
 
 
 var game = new Phaser.Game(config);
@@ -126,25 +128,33 @@ Entity.prototype.fire = function() {
 Alien.prototype.easyTurn = function() {
     var min = 1;
     var max = 6;
-    var myRand = Math.floor(Math.random * (max - min) + min);
+    var myRand = Math.floor(Math.random() * (max - min)) + min;
+   
+    console.log(myRand);
+   
 
     switch(myRand) {
         case 1:
             this.moveLeft();
+            console.log("moving left");
             break;
         case 2:
             this.moveRight();
+            console.log("moving right");
             break;
         case 3:
             this.fire();
+            console.log("firing");
             break;
         case 4:
             this.jumpLeft();
+            console.log("jumping left");
             break;
         case 5:
             this.jumpRight();
+            console.log("jumping left");
             break;
-         default:
+         //default:
 
     }
 
@@ -270,6 +280,8 @@ function create ()
 
 function update ()
 {
+
+   
     /*
     Keeps the numbers over the heads of the astronauts and aliens.
     */
@@ -313,7 +325,7 @@ function update ()
     */
     if(astroTurn) {
 
-        // Code for when it is player's turn!
+        
 
         astroTurn = false;
     } else {
@@ -321,13 +333,12 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        while(!allStopped() && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         astroTurn = true;
     }
 
@@ -396,11 +407,11 @@ function disappearBullet() {
 /*
     Returns boolean that is true if all the aliens and astronauts are not moving.
 */
-function allStopped() {
+function allStopped(aliens, astronauts) {
     var allStopped = true;
     for(i = 0; i < aliensTotal; i++) {
-        allStopped = allStopped && (aliens[i].body.velocity() == 0);
-        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
+        allStopped = allStopped && (aliens[i].body.velocity == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity == 0);
     }
     return allStopped;
 }
