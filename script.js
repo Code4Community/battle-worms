@@ -27,8 +27,6 @@ var asteroid;
 var rover;
 // astroTurn is true if it's the player's turn.
 var astroTurn;
-// allStopped is true if all Entitiy's have velocity zero.
-var allStopped;
 
 var game = new Phaser.Game(config);
 
@@ -272,14 +270,6 @@ function update ()
     for(i = 0; i < aliensLeft; i++) {
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
-    
-    /*
-    Sets boolean allStopped if all the aliens and astronauts are not moving.
-    */
-    for(i = 0; i < aliensTotal; i++) {
-        allStopped = allStopped && (aliens[i].body.velocity() == 0);
-        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
-    }
 
     /*
     Checks if any of the aliens are in process of jumping.
@@ -321,13 +311,13 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped() && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped() && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped() && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
-        while(!allStopped && (bullet.body.velocity == 0));
+        while(!allStopped() && (bullet.body.velocity == 0));
         astroTurn = true;
     }
 
@@ -360,4 +350,16 @@ function update ()
 
 function disappearBullet() {
     bullet.setActive(false).setVisible(false);
+}
+
+/*
+    Returns boolean that is true if all the aliens and astronauts are not moving.
+*/
+function allStopped() {
+    var allStopped = true;
+    for(i = 0; i < aliensTotal; i++) {
+        allStopped = allStopped && (aliens[i].body.velocity() == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
+    }
+    return allStopped;
 }
