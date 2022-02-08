@@ -128,25 +128,33 @@ Entity.prototype.fire = function() {
 Alien.prototype.easyTurn = function() {
     var min = 1;
     var max = 6;
-    var myRand = Math.floor(Math.random * (max - min) + min);
+    var myRand = Math.floor(Math.random() * (max - min)) + min;
+   
+    console.log(myRand);
+   
 
     switch(myRand) {
         case 1:
             this.moveLeft();
+            console.log("moving left");
             break;
         case 2:
             this.moveRight();
+            console.log("moving right");
             break;
         case 3:
             this.fire();
+            console.log("firing");
             break;
         case 4:
             this.jumpLeft();
+            console.log("jumping left");
             break;
         case 5:
             this.jumpRight();
+            console.log("jumping left");
             break;
-         default:
+         //default:
 
     }
 
@@ -272,6 +280,8 @@ function create ()
 
 function update ()
 {
+
+   
     /*
     Keeps the numbers over the heads of the astronauts and aliens.
     */
@@ -314,7 +324,7 @@ function update ()
     */
     if(astroTurn) {
 
-        // Code for when it is player's turn!
+        
 
         astroTurn = false;
     } else {
@@ -322,7 +332,6 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
