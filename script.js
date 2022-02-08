@@ -277,6 +277,7 @@ function update ()
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
     for(i = 0; i < aliensLeft; i++) {
+        aliens[i].setPosition(aliens[i].x,250);
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
 
@@ -330,6 +331,8 @@ function update ()
         astroTurn = true;
     }
 
+    bulletTouchingSprite()
+
     if (gameOver)
     {
         return;
@@ -353,6 +356,35 @@ function update ()
 
     if(keyK.isDown) {
         aliens[1].jumpRight();
+    }
+
+}
+
+function bulletTouchingSprite(){
+    //if it is the astro turn or if alien turn
+    //remove the ! when the turns are configured 
+    if(!astroTurn){
+        //check if alien is intersecting bullet
+        for(i = 0; i<aliensTotal; i++)
+        {
+            var alienBound = aliens[i].getBounds();
+            var bulletBounds = bullet.getBounds();
+            if(Phaser.Geom.Intersects.RectangleToRectangle(alienBound,bulletBounds))
+            {
+                disappearBullet();
+            }
+        }
+    } else {
+        //check if astro is intersecting bullet
+        for(i = 0; i<astronautsTotal; i++)
+        {
+            var astroBound = astronauts[i].getBounds();
+            var bulletBounds = bullet.getBounds();
+            if(Phaser.Geom.Intersects.RectangleToRectangle(astroBound,bulletBounds))
+            {
+                disappearBullet();
+            }
+        }
     }
 
 }
