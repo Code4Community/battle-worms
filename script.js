@@ -1,7 +1,21 @@
+//Define Variables
+var platforms;
+var cursors;
+var score = 0;
+var gameOver = false;
+var scoreText;
+var bullet;
+var asteroid;
+var rover;
+var screenWidth = 800;
+var screenHeight = 600;
+// astroTurn is true if it's the player's turn.
+var astroTurn;
+
 var config = {
     type: Phaser.AUTO,
-    width: 800,
-    height: 600,
+    width: screenWidth,
+    height: screenHeight,
     physics: {
         default: 'arcade',
         arcade: {
@@ -15,18 +29,6 @@ var config = {
         update: update
     }
 };
-
-//Define Variables
-var platforms;
-var cursors;
-var score = 0;
-var gameOver = false;
-var scoreText;
-var bullet;
-var asteroid;
-var rover;
-// astroTurn is true if it's the player's turn.
-var astroTurn;
 
 
 var game = new Phaser.Game(config);
