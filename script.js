@@ -17,9 +17,6 @@ var config = {
 };
 
 //Define Variables
-var player;
-var stars;
-//var bombs;
 var platforms;
 var cursors;
 var score = 0;
@@ -28,36 +25,38 @@ var scoreText;
 var bullet;
 var asteroid;
 var rover;
+// astroTurn is true if it's the player's turn.
+var astroTurn;
+// allStopped is true if all Entitiy's have velocity zero.
+var allStopped;
 
 
 var game = new Phaser.Game(config);
 
-//Enitity class that deinfes movement of the players and enemies
+// Enitity class that defines movement of the players and enemies
 class Entity extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
         scene.add.existing(this);
         scene.physics.add.existing(this);
         this.setScale(0.8, 0.8);
-        this.setBounce(0.001);
+        this.setBounce(0.3);
         this.setCollideWorldBounds(true);
         scene.physics.add.collider(this, platforms);
-        // creates number sprites above heads of Entity objects
+
+        // isJumping is true when the player is jumping.
+        var isJumping = false;
+
+        // Creates number sprites above heads of Entity objects.
         index++;
         this.headNumber = scene.physics.add.sprite(this.x, this.y - 10, 'num'+index);
         this.headNumber.body.allowGravity = false;
         this.headNumber.setScale(1.5);
     }
 
-    // need to make move() function a Entity function
-
-    // need to make jump() function a Entity function
-
-    // need to make fire() function a Entity function
-
 }
 
-//Astronuats are the players
+// Astronuats are the players.
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'astronautidle', index);
@@ -66,7 +65,7 @@ class Astronaut extends Entity {
     }
 }
 
-//Aliens are the enemies
+// Aliens are the computer-controlled enemies.
 class Alien extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'alienidle', index);
@@ -74,9 +73,9 @@ class Alien extends Entity {
         this.name = "Alien "+index;
     }
 }
-// Still need to add animations for moveLeft and moveRight
+// Still need to add animations for moveLeft and moveRight.
 Entity.prototype.moveLeft = function() {
-    this.setVelocityX(-160);
+    this.setVelocityX(-140);
     /*
         Next few lines change velocity back to zero after 2 seconds.
         Written this way because the first parameter has to be a function object, not a function's return value.
@@ -90,14 +89,33 @@ Entity.prototype.moveLeft = function() {
 }
 
 Entity.prototype.moveRight = function() {
-    this.setVelocityX(160);
+    this.setVelocityX(140);
     var that = this;
     setTimeout(function() {
         that.setVelocityX(0);
     }, 2000);
 }
 
-// need to add x and y velocity inputs
+Entity.prototype.jumpLeft = function() {
+    if(this.body.touching.down) {
+        this.setVelocityY(-300);
+        this.setVelocityX(-140);
+        this.isJumping = true;
+    }
+}
+
+Entity.prototype.jumpRight = function() {
+    if(this.body.touching.down) {
+        this.setVelocityY(-300);
+        this.setVelocityX(140);
+        this.isJumping = true;
+    }
+}
+
+
+
+
+// Need to add x and y velocity inputs.
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
     bullet.setActive(true).setVisible(true);
@@ -105,16 +123,44 @@ Entity.prototype.fire = function() {
     bullet.setVelocityY(-500);
 }
 
+
+// An easy alien turn that chooses one of the five moves to do
+Alien.prototype.easyTurn = function() {
+    var min = 1;
+    var max = 6;
+    var myRand = Math.floor(Math.random * (max - min) + min);
+
+    switch(myRand) {
+        case 1:
+            this.moveLeft();
+            break;
+        case 2:
+            this.moveRight();
+            break;
+        case 3:
+            this.fire();
+            break;
+        case 4:
+            this.jumpLeft();
+            break;
+        case 5:
+            this.jumpRight();
+            break;
+         default:
+
+    }
+
+}
+
 function preload ()
 {
     // Load all of the images and assign a name to them
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
-    this.load.image('star', 'assets/star.png');
     this.load.image('asteroid', 'assets/asteroid.png');
     this.load.image('Rover', 'assets/Rover.png')
-//  this.load.image('bomb', 'assets/bomb.png');   
-    this.load.spritesheet('dude', 'assets/dude.png', { frameWidth: 32, frameHeight: 48 });
+    this.load.image('rover', 'assets/Rover.jpg');
+    this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
@@ -128,7 +174,7 @@ function create ()
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
-    //Define Static Groups
+    // Define Static Groups
     platforms = this.physics.add.staticGroup();
     asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
@@ -149,9 +195,9 @@ function create ()
     player.setSize(64, 64, true);
     player.setScale(0.8, 0.8);
 
-    // Player physics properties. Give the little guy a slight bounce.
-    player.setBounce(0.2);
-    player.setCollideWorldBounds(true);
+    // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
+    asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
+    rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
     // Bullet physics and properties
     bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
@@ -164,11 +210,15 @@ function create ()
         if(up || down || left || right) {
         disappearBullet();
     }});
-    
+
+    // It is the player's turn first.
+    astroTurn = true;
+
     astronauts = [];
     astronautsTotal = 3;
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
+        // Here is where we decide where Astronouts start
         astronauts.push(new Astronaut(this, 50 + (i * 50), 450, i));
     }
 
@@ -176,12 +226,9 @@ function create ()
     aliensTotal = 3;
     aliensLeft = 3;
     for(i=0; i < aliensTotal; i++) {
+        // Here is where we decide where Aliens start.
         aliens.push(new Alien(this, 200 + (i * 50), 450, i));
     }
-   
-
-    // still need to kill bullet on hitting ground
-    // bullet.checkWorldBounds = true;
 
     //  Our player animations, turning, walking left and walking right.
     this.anims.create({
@@ -211,20 +258,8 @@ function create ()
     keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
     keyR = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.R);
     keyF = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.F);
-
-    //  Some stars to collect, 12 in total, evenly spaced 70 pixels apart along the x axis
-    stars = this.physics.add.group({
-        key: 'star',
-        repeat: 11,
-        setXY: { x: 12, y: 0, stepX: 70 }
-    });
-
-    stars.children.iterate(function (child) {
-
-        //  Give each star a slightly different bounce
-        child.setBounceY(Phaser.Math.FloatBetween(0.4, 0.8));
-
-    });
+    keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
+    keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
 
     //bombs = this.physics.add.group();
 
@@ -232,65 +267,82 @@ function create ()
     scoreText = this.add.text(16, 16, 'Aliens: 0', { fontSize: '32px', fill: '#FFFFFF' });
 
     // Collide the player and the stars with the platforms
-    this.physics.add.collider(player, platforms);
-    this.physics.add.collider(stars, platforms);
     this.physics.add.collider(bullet, platforms);
-    this.physics.add.collider(player, asteroid);
-    this.physics.add.collider(player, rover);
-    this.physics.add.collider(player, bullet);
-    //this.physics.add.collider(bombs, platforms);
-
-    // Checks to see if the player overlaps with any of the stars, if he does call the collectStar function
-    this.physics.add.overlap(player, stars, collectStar, null, this);
-
-    //this.physics.add.collider(player, bombs, hitBomb, null, this);
-
-    //this.physics.add.collider(bullet, stars, bulletHitEdge, null, this);
-    
-    //this.physics.add.collider(player, bombs, hitBomb, null, this);
 }
 
 function update ()
 {
+    /*
+    Keeps the numbers over the heads of the astronauts and aliens.
+    */
     for(i = 0; i < astronautsLeft; i++) {
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
-
     for(i = 0; i < aliensLeft; i++) {
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
+    }
+    
+    /*
+    Sets boolean allStopped if all the aliens and astronauts are not moving.
+    */
+    for(i = 0; i < aliensTotal; i++) {
+        allStopped = allStopped && (aliens[i].body.velocity() == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
+    }
+
+    /*
+    Checks if any of the aliens are in process of jumping.
+    If they have started jump and are touching ground,
+    the jump is over and they stop moving in X direction.
+    */
+    for(i = 0; i < aliensTotal; i++) {
+        if(aliens[i].isJumping && aliens[i].body.touching.down) {
+            aliens[i].isJumping = false;
+            aliens[i].setVelocity(0);
+        }
+    }
+    /*  
+    Checks if any of the astronauts are in process of jumping.
+    If they have started jump and are touching ground,
+    the jump is over and they stop moving in X direction.
+    */
+    for(i = 0; i < astronautsTotal; i++) {
+        if(astronauts[i].isJumping && astronauts[i].body.touching.down) {
+            astronauts[i].isJumping = false;
+            astronauts[i].setVelocity(0);
+        }
+    }
+
+    if(bullet.body.touching.down) {
+        disappearBullet();
+    }
+
+    /*
+    Checks if its astronauts' turn or aliens' turn.
+    */
+    if(astroTurn) {
+
+        // Code for when it is player's turn!
+
+        astroTurn = false;
+    } else {
+        /*
+        Checks that everything is still and then runs next action of the aliens.
+        Aliens take three actions.
+        */
+        while(!allStopped && (bullet.body.velocity == 0));
+        aliens[0].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        aliens[1].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        aliens[2].easyTurn();
+        while(!allStopped && (bullet.body.velocity == 0));
+        astroTurn = true;
     }
 
     if (gameOver)
     {
         return;
-    }
-
-    if (cursors.left.isDown)
-    {
-        player.setVelocityX(-160);
-        player.flipX=true;
-        player.anims.play('left', true);
-    }
-    else if (cursors.right.isDown)
-    {
-        player.setVelocityX(160);
-        player.flipX=false;
-        player.anims.play('right', true);
-    }
-    else
-    {
-        player.setVelocityX(0);
-
-        player.anims.play('turn', true);
-    }
-
-    if (cursors.up.isDown && player.body.touching.down)
-    {
-        player.setVelocityY(-330);
-    }
-
-    if(spacebar.isDown) {
-        fire();
     }
 
     if(keyL.isDown) {
@@ -302,58 +354,17 @@ function update ()
     }
 
     if(keyF.isDown) {
-        astronauts[2].fire();
+        astronauts[1].fire();
     }
-}
 
-function collectStar (player, star)
-{
-    star.disableBody(true, true);
-
-    //  Add and update the score
-    score += 1;
-    scoreText.setText('Aliens: ' + score);
-
-    if (stars.countActive(true) === 0)
-    {
-        //  A new batch of stars to collect
-        stars.children.iterate(function (child) {
-
-            child.enableBody(true, child.x, 0, true, true);
-
-        });
-
-        var x = (player.x < 400) ? Phaser.Math.Between(400, 800) : Phaser.Math.Between(0, 400);
-
-        //var bomb = bombs.create(x, 16, 'bomb');
-        //bomb.setBounce(1);
-        //bomb.setCollideWorldBounds(true);
-        //bomb.setVelocity(Phaser.Math.Between(-200, 200), 20);
-        //bomb.allowGravity = false;
-
+    if(keyJ.isDown) {
+        aliens[0].jumpLeft();
     }
-}
 
-/*function hitBomb (player, bomb)
-{
-    this.physics.pause();
+    if(keyK.isDown) {
+        aliens[1].jumpRight();
+    }
 
-    player.setTint(0xff0000);
-
-    player.anims.play('turn');
-
-    gameOver = true;
-}*/
-
-// fires the bullet from the player
-// this function is not necessary for final game, just test shooting from player
-function fire() {
-
-        this.bullet.setPosition(this.player.x, this.player.y);
-        bullet.setActive(true).setVisible(true);
-
-        this.bullet.setVelocityX(-100);
-        this.bullet.setVelocityY(-500);
 }
 
 function disappearBullet() {
