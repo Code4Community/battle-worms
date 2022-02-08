@@ -322,11 +322,11 @@ function update ()
         Aliens take three actions.
         */
         while(!allStopped && (bullet.body.velocity == 0));
-        alien[0].easyTurn();
+        aliens[0].easyTurn();
         while(!allStopped && (bullet.body.velocity == 0));
-        alien[1].easyTurn();
+        aliens[1].easyTurn();
         while(!allStopped && (bullet.body.velocity == 0));
-        alien[2].easyTurn();
+        aliens[2].easyTurn();
         while(!allStopped && (bullet.body.velocity == 0));
         astroTurn = true;
     }
