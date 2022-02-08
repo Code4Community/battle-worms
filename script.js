@@ -9,6 +9,7 @@ var asteroid;
 var rover;
 var screenWidth = 800;
 var screenHeight = 600;
+var astroTurnCounter = 0;
 // astroTurn is true if it's the player's turn.
 var astroTurn;
 
@@ -130,35 +131,54 @@ Alien.prototype.easyTurn = function() {
     var max = 6;
     var myRand = Math.floor(Math.random() * (max - min)) + min;
    
-    console.log(myRand);
+    //console.log(myRand);
    
 
     switch(myRand) {
         case 1:
             this.moveLeft();
-            console.log("moving left");
+            //console.log("moving left");
             break;
         case 2:
             this.moveRight();
-            console.log("moving right");
+            //console.log("moving right");
             break;
         case 3:
             this.fire();
-            console.log("firing");
+           // console.log("firing");
             break;
         case 4:
             this.jumpLeft();
-            console.log("jumping left");
+            //console.log("jumping left");
             break;
         case 5:
             this.jumpRight();
-            console.log("jumping left");
+            //console.log("jumping left");
             break;
          //default:
 
     }
 
 }
+
+// Function that does the astronauts manual turn
+/*
+function manualTurn(currentAstro) {
+    var counter = 2;
+
+    input = prompt();
+    while(counter >= 0) {
+        switch(input) {
+            case "L":
+                astronauts[currentAstro].moveLeft();
+                counter--;
+            default:
+        }
+
+    }
+}
+*/
+
 
 function preload ()
 {
@@ -278,7 +298,18 @@ function create ()
     this.physics.add.collider(bullet, platforms);
 }
 
-function update ()
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
+
+
+  function update ()
 {
 
    
@@ -324,9 +355,12 @@ function update ()
     */
     if(astroTurn) {
 
-        
+       
+       //manualTurn(1);
+       
 
         astroTurn = false;
+        astroTurnCounter = 0;
     } else {
         /*
         Checks that everything is still and then runs next action of the aliens.
@@ -338,7 +372,9 @@ function update ()
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+
         astroTurn = true;
+        console.log("astro turn changes");
     }
 
     if (gameOver)
@@ -348,15 +384,19 @@ function update ()
 
     if(keyL.isDown) {
         astronauts[0].moveLeft();
+        astroTurnCounter++;
     }
 
     if(keyR.isDown) {
         astronauts[1].moveRight();
+        astroTurnCounter++;
     }
 
     if(keyF.isDown) {
         astronauts[1].fire();
+        astroTurnCounter++;
     }
+    
 
     if(keyJ.isDown) {
         aliens[0].jumpLeft();
