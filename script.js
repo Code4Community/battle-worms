@@ -320,13 +320,13 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
-        while(!allStopped() && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         astroTurn = true;
     }
 
@@ -364,11 +364,11 @@ function disappearBullet() {
 /*
     Returns boolean that is true if all the aliens and astronauts are not moving.
 */
-function allStopped() {
+function allStopped(aliens, astronauts) {
     var allStopped = true;
     for(i = 0; i < aliensTotal; i++) {
-        allStopped = allStopped && (aliens[i].body.velocity() == 0);
-        allStopped = allStopped && (astronauts[i].body.velocity() == 0);
+        allStopped = allStopped && (aliens[i].body.velocity == 0);
+        allStopped = allStopped && (astronauts[i].body.velocity == 0);
     }
     return allStopped;
 }
