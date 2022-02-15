@@ -332,12 +332,16 @@ function update ()
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
+       /*
         aliens[0].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity != 0));
         aliens[1].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity != 0));
         aliens[2].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+        while(!allStopped(aliens, astronauts) && (bullet.body.velocity != 0));
+        astroTurn = true;
+        */
+
         astroTurn = true;
     }
 
