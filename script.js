@@ -5,11 +5,11 @@ var score = 0;
 var gameOver = false;
 var scoreText;
 var bullet;
-var asteroid;
 var rover;
 var screenWidth = 800;
 var scrollWidth = 2*screenWidth;
 var screenHeight = 600;
+var astroTurnCounter = 0;
 // astroTurn is true if it's the player's turn.
 var astroTurn;
 
@@ -129,44 +129,70 @@ Entity.prototype.fire = function() {
 Alien.prototype.easyTurn = function() {
     var min = 1;
     var max = 6;
-    var myRand = Math.floor(Math.random * (max - min) + min);
+    var myRand = Math.floor(Math.random() * (max - min)) + min;
+   
+    //console.log(myRand);
+   
 
     switch(myRand) {
         case 1:
             this.moveLeft();
+            //console.log("moving left");
             break;
         case 2:
             this.moveRight();
+            //console.log("moving right");
             break;
         case 3:
             this.fire();
+           // console.log("firing");
             break;
         case 4:
             this.jumpLeft();
+            //console.log("jumping left");
             break;
         case 5:
             this.jumpRight();
+            //console.log("jumping left");
             break;
-         default:
+         //default:
 
     }
 
 }
+
+// Function that does the astronauts manual turn
+/*
+function manualTurn(currentAstro) {
+    var counter = 2;
+
+    input = prompt();
+    while(counter >= 0) {
+        switch(input) {
+            case "L":
+                astronauts[currentAstro].moveLeft();
+                counter--;
+            default:
+        }
+
+    }
+}
+*/
+
 
 function preload ()
 {
     // Load all of the images and assign a name to them
     this.load.image('sky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
-    this.load.image('asteroid', 'assets/asteroid.png');
-    this.load.image('Rover', 'assets/Rover.png')
-    this.load.image('rover', 'assets/Rover.jpg');
+    this.load.image('Rover', 'assets/Rover.png');
     this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
     this.load.spritesheet('astronautidle', 'assets/astroidle2.png', { frameWidth: 64, frameHeight: 64 });
     this.load.spritesheet('alienidle', 'assets/alienidle.png', { frameWidth: 64, frameHeight: 64 });
     this.load.image('num1', 'assets/numbers/number1.png');
     this.load.image('num2', 'assets/numbers/number2.png');
     this.load.image('num3', 'assets/numbers/number3.png');
+    this.load.image('Spaceship', 'assets/Spaceship.png');
 }
 
 function create ()
@@ -177,8 +203,8 @@ function create ()
 
     // Define Static Groups
     platforms = this.physics.add.staticGroup();
-    asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
+    Spaceship = this.physics.add.staticGroup();
 
     // Here we create the ground.
     platforms.create(600, 650, 'ground').setScale(3).refreshBody();
@@ -187,8 +213,8 @@ function create ()
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
-    asteroid.create(200,205, 'asteroid').setScale(.1).refreshBody();
     rover.create(700,340, 'Rover').setScale(.1).refreshBody();
+    Spaceship.create(750,30, 'Spaceship').setScale(.1).refreshBody();
 
     // The player and its settings
     player = this.physics.add.sprite(100, 400, 'dude');
@@ -196,7 +222,6 @@ function create ()
     player.setScale(0.8, 0.8);
 
     // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
-    asteroid.create(200,187, 'humanobstacle', [1]).setScale(1).refreshBody();
     rover.create(700,350, 'rover').setScale(.1).refreshBody();
 
     // Bullet physics and properties
@@ -271,8 +296,21 @@ function create ()
     this.cameras.main.setBounds(0, 0,scrollWidth, screenHeight);
 }
 
-function update ()
+
+function sleep(milliseconds) {
+    const date = Date.now();
+    let currentDate = null;
+    do {
+      currentDate = Date.now();
+    } while (currentDate - date < milliseconds);
+  }
+
+
+
+  function update ()
 {
+
+   
     /*
     Keeps the numbers over the heads of the astronauts and aliens.
     */
@@ -280,6 +318,7 @@ function update ()
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
     for(i = 0; i < aliensLeft; i++) {
+        aliens[i].setPosition(aliens[i].x,250);
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
 
@@ -315,23 +354,29 @@ function update ()
     */
     if(astroTurn) {
 
-        // Code for when it is player's turn!
+       
+       //manualTurn(1);
+       
 
         astroTurn = false;
+        astroTurnCounter = 0;
     } else {
         /*
         Checks that everything is still and then runs next action of the aliens.
         Aliens take three actions.
         */
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[0].easyTurn();
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[1].easyTurn();
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
         aliens[2].easyTurn();
         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+
         astroTurn = true;
+        //console.log("astro turn changes");
     }
+
+    bulletTouchingSprite()
 
     if (gameOver)
     {
@@ -349,15 +394,19 @@ function update ()
 
     if(keyL.isDown) {
         astronauts[0].moveLeft();
+        astroTurnCounter++;
     }
 
     if(keyR.isDown) {
         astronauts[1].moveRight();
+        astroTurnCounter++;
     }
 
     if(keyF.isDown) {
         astronauts[1].fire();
+        astroTurnCounter++;
     }
+    
 
     if(keyJ.isDown) {
         aliens[0].jumpLeft();
@@ -365,6 +414,35 @@ function update ()
 
     if(keyK.isDown) {
         aliens[1].jumpRight();
+    }
+
+}
+
+function bulletTouchingSprite(){
+    //if it is the astro turn or if alien turn
+    //remove the ! when the turns are configured 
+    if(!astroTurn){
+        //check if alien is intersecting bullet
+        for(i = 0; i<aliensTotal; i++)
+        {
+            var alienBound = aliens[i].getBounds();
+            var bulletBounds = bullet.getBounds();
+            if(Phaser.Geom.Intersects.RectangleToRectangle(alienBound,bulletBounds))
+            {
+                disappearBullet();
+            }
+        }
+    } else {
+        //check if astro is intersecting bullet
+        for(i = 0; i<astronautsTotal; i++)
+        {
+            var astroBound = astronauts[i].getBounds();
+            var bulletBounds = bullet.getBounds();
+            if(Phaser.Geom.Intersects.RectangleToRectangle(astroBound,bulletBounds))
+            {
+                disappearBullet();
+            }
+        }
     }
 
 }
