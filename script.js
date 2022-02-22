@@ -170,7 +170,7 @@ function preload ()
 
 function create ()
 {
-    this.physics.world.setBounds(0,0,800,600);
+    this.physics.world.setBounds(0,0,2*screenWidth,screenHeight);
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -268,6 +268,8 @@ function create ()
 
     // Collide the player and the stars with the platforms
     this.physics.add.collider(bullet, platforms);
+    this.cameras.main.startFollow(astronauts[1]);
+    //this.cameras.main.setBounds(0, 0,screenWidth, screenHeight);
 }
 
 function update ()
@@ -336,6 +338,15 @@ function update ()
     {
         return;
     }
+
+    /*if (cursors.left.isDown)
+    {
+        game.camera.x -=10;
+    }
+    if (cursors.right.isDown)
+    {
+        game.camera.x += 10;
+    }*/
 
     if(keyL.isDown) {
         astronauts[0].moveLeft();
