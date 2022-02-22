@@ -8,6 +8,7 @@ var bullet;
 var asteroid;
 var rover;
 var screenWidth = 800;
+var scrollWidth = 2*screenWidth;
 var screenHeight = 600;
 // astroTurn is true if it's the player's turn.
 var astroTurn;
@@ -170,7 +171,7 @@ function preload ()
 
 function create ()
 {
-    this.physics.world.setBounds(0,0,2*screenWidth,screenHeight);
+    this.physics.world.setBounds(0,0,scrollWidth,screenHeight);
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
 
@@ -178,10 +179,9 @@ function create ()
     platforms = this.physics.add.staticGroup();
     asteroid  = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
-    
 
     // Here we create the ground.
-    platforms.create(400, 568, 'ground').setScale(2).refreshBody();
+    platforms.create(600, 650, 'ground').setScale(3).refreshBody();
 
     // Place our static images on the screen
     platforms.create(600, 400, 'ground');
@@ -268,8 +268,7 @@ function create ()
 
     // Collide the player and the stars with the platforms
     this.physics.add.collider(bullet, platforms);
-    this.cameras.main.startFollow(astronauts[1]);
-    //this.cameras.main.setBounds(0, 0,screenWidth, screenHeight);
+    this.cameras.main.setBounds(0, 0,scrollWidth, screenHeight);
 }
 
 function update ()
@@ -339,14 +338,14 @@ function update ()
         return;
     }
 
-    /*if (cursors.left.isDown)
+    if (cursors.left.isDown)
     {
-        game.camera.x -=10;
+        this.cameras.main.scrollX -= 5;
     }
     if (cursors.right.isDown)
     {
-        game.camera.x += 10;
-    }*/
+        this.cameras.main.scrollX += 5;
+    }
 
     if(keyL.isDown) {
         astronauts[0].moveLeft();
