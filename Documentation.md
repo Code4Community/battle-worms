@@ -1,6 +1,9 @@
-# Notes for between Semesters
--Multiple levels? Rolling screen?? How do we want to expand the game?
+### Ideas for Implementing turn based play
 
--Rover Pic, Alien sprite, lazer sprite
+-- Add event listeners to interact with Html 
 
--Make all three of the players move independently
+--Kid will do turn 
+--triggers even lister
+--trigers change to boolean as to whose turn it is
+     --- seperate function (ie boolean outside of updateS)
+
