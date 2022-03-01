@@ -161,23 +161,32 @@ Alien.prototype.easyTurn = function() {
 
 }
 
+
+// Run button that does one alien turn
+document.getElementById("run").addEventListener("click", (event) => {
+    aliens[0].easyTurn();
+  });
+
 // Function that does the astronauts manual turn
-/*
+
 function manualTurn(currentAstro) {
     var counter = 2;
 
-    input = prompt();
+    //input = prompt();
     while(counter >= 0) {
-        switch(input) {
+        /*switch(input) {
             case "L":
                 astronauts[currentAstro].moveLeft();
                 counter--;
             default:
-        }
+        }*/
+
+        astronauts[currentAstro].moveLeft();
+        counter--;
 
     }
 }
-*/
+
 
 
 function preload ()
@@ -293,8 +302,47 @@ function create ()
 
     // Collide the player and the stars with the platforms
     this.physics.add.collider(bullet, platforms);
+
     this.cameras.main.setBounds(0, 0,scrollWidth, screenHeight);
+
 }
+
+
+function nextTurn()
+{
+    /*
+    Checks if its astronauts' turn or aliens' turn.
+    */
+    if(astroTurn) {
+
+       
+        manualTurn(astroTurnCounter);
+
+        if(astroTurnCounter >= 2) astroTurnCounter = 0; 
+ 
+         astroTurn = false;
+         
+     } else {
+         /*
+         Checks that everything is still and then runs next action of the aliens.
+         Aliens take three actions.
+         */
+         
+         aliens[0].easyTurn();
+         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+         aliens[1].easyTurn();
+         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+         aliens[2].easyTurn();
+         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
+ 
+         astroTurn = true;
+         console.log("astro turn changes");
+     }
+
+     
+     
+}
+
 
 
 function sleep(milliseconds) {
@@ -318,7 +366,7 @@ function sleep(milliseconds) {
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
     for(i = 0; i < aliensLeft; i++) {
-        aliens[i].setPosition(aliens[i].x,250);
+        
         aliens[i].headNumber.setPosition(aliens[i].x, aliens[i].y - 40);
     }
 
@@ -349,33 +397,10 @@ function sleep(milliseconds) {
         disappearBullet();
     }
 
-    /*
-    Checks if its astronauts' turn or aliens' turn.
-    */
-    if(astroTurn) {
+    
 
-       
-       //manualTurn(1);
-       
-
-        astroTurn = false;
-        astroTurnCounter = 0;
-    } else {
-        /*
-        Checks that everything is still and then runs next action of the aliens.
-        Aliens take three actions.
-        */
-        aliens[0].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
-        aliens[1].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
-        aliens[2].easyTurn();
-        while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
-
-        astroTurn = true;
-        //console.log("astro turn changes");
-    }
-
+    
+    
     bulletTouchingSprite()
 
     if (gameOver)
