@@ -162,30 +162,43 @@ Alien.prototype.easyTurn = function() {
 }
 
 
+// Function that takes care of all turns anc cycling aliens and astronauts
+function masterTurn()
+{
+    var counter = 0;
+    while(astronautsLeft > 0 && aliensLeft > 0)
+    {
+        
+
+
+        if(counter == 2) counter = 0;
+        else counter++;
+    }
+
+
+    // game over thing
+
+}
+
+// One alien turn
+function alienTurn()
+{
+
+
+
+
+
+
+}
+
+
+
+
 // Run button that does one alien turn
 document.getElementById("run").addEventListener("click", (event) => {
     aliens[0].easyTurn();
   });
 
-// Function that does the astronauts manual turn
-
-function manualTurn(currentAstro) {
-    var counter = 2;
-
-    //input = prompt();
-    while(counter >= 0) {
-        /*switch(input) {
-            case "L":
-                astronauts[currentAstro].moveLeft();
-                counter--;
-            default:
-        }*/
-
-        astronauts[currentAstro].moveLeft();
-        counter--;
-
-    }
-}
 
 
 
@@ -306,52 +319,6 @@ function create ()
     this.cameras.main.setBounds(0, 0,scrollWidth, screenHeight);
 
 }
-
-
-function nextTurn()
-{
-    /*
-    Checks if its astronauts' turn or aliens' turn.
-    */
-    if(astroTurn) {
-
-       
-        manualTurn(astroTurnCounter);
-
-        if(astroTurnCounter >= 2) astroTurnCounter = 0; 
- 
-         astroTurn = false;
-         
-     } else {
-         /*
-         Checks that everything is still and then runs next action of the aliens.
-         Aliens take three actions.
-         */
-         
-         aliens[0].easyTurn();
-         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
-         aliens[1].easyTurn();
-         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
-         aliens[2].easyTurn();
-         while(!allStopped(aliens, astronauts) && (bullet.body.velocity == 0));
- 
-         astroTurn = true;
-         console.log("astro turn changes");
-     }
-
-     
-     
-}
-
-
-
-function sleep(milliseconds) {
-    const date = Date.now();
-    let currentDate = null;
-    do {
-      currentDate = Date.now();
-    } while (currentDate - date < milliseconds);
-  }
 
 
 
