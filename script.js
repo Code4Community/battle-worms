@@ -7,12 +7,12 @@ var scoreText;
 var bullet;
 var rover;
 var screenWidth = 800;
-var scrollWidth = 2*screenWidth;
+var scrollWidth = 2*screenWidth; // width of the rolling screen
 var screenHeight = 600;
 var astroTurnCounter = 0;
-// astroTurn is true if it's the player's turn.
-var astroTurn;
+var astroTurn; // astroTurn is true if it's the player's turn.
 
+//Config data used to build the game
 var config = {
     type: Phaser.AUTO,
     width: screenWidth,
@@ -31,7 +31,7 @@ var config = {
     }
 };
 
-
+//Define the game
 var game = new Phaser.Game(config);
 
 // Enitity class that defines movement of the players and enemies
@@ -244,7 +244,7 @@ function create ()
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
         // Here is where we decide where Astronouts start
-        astronauts.push(new Astronaut(this, 50 + (i * 50), 450, i));
+        astronauts.push(new Astronaut(this, 800 + (i * 50), 450, i));
     }
 
     aliens = [];
@@ -252,7 +252,7 @@ function create ()
     aliensLeft = 3;
     for(i=0; i < aliensTotal; i++) {
         // Here is where we decide where Aliens start.
-        aliens.push(new Alien(this, 200 + (i * 50), 450, i));
+        aliens.push(new Alien(this, 400 + (i * 50), 450, i));
     }
 
     //  Our player animations, turning, walking left and walking right.
