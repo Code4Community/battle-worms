@@ -15,6 +15,7 @@ var astroTurn; // astroTurn is true if it's the player's turn.
 //Config data used to build the game
 var config = {
     type: Phaser.AUTO,
+    parent: "game",
     width: screenWidth,
     height: screenHeight,
     physics: {
@@ -46,6 +47,7 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.collider(this, platforms);
 
         // isJumping is true when the player is jumping.
+        
         var isJumping = false;
 
         // Creates number sprites above heads of Entity objects.
@@ -187,8 +189,6 @@ function manualTurn(currentAstro) {
     }
 }
 
-
-
 function preload ()
 {
     // Load all of the images and assign a name to them
@@ -209,6 +209,7 @@ function create ()
     this.physics.world.setBounds(0,0,scrollWidth,screenHeight);
     //  A simple background for our game
     this.add.image(400, 300, 'sky');
+    this.add.image(1200, 300, 'sky');
 
     // Define Static Groups
     platforms = this.physics.add.staticGroup();
@@ -307,7 +308,6 @@ function create ()
 
 }
 
-
 function nextTurn()
 {
     /*
@@ -343,20 +343,15 @@ function nextTurn()
      
 }
 
-
-
 function sleep(milliseconds) {
     const date = Date.now();
     let currentDate = null;
     do {
       currentDate = Date.now();
     } while (currentDate - date < milliseconds);
-  }
+}
 
-
-
-  function update ()
-{
+  function update (){
 
    
     /*
@@ -475,7 +470,6 @@ function bulletTouchingSprite(){
 function disappearBullet() {
     bullet.setActive(false).setVisible(false);
 }
-
 /*
     Returns boolean that is true if all the aliens and astronauts are not moving.
 */
