@@ -6,27 +6,22 @@
     <script src="//cdn.jsdelivr.net/npm/phaser@3.11.0/dist/phaser.js"></script>
     <script defer src="./script.js"></script>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css"
-        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
-        
+        integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">    
     <script>
     </script>
     <style type="text/css">
         body {
             margin: 0;
         }
-        div {
-            border: 1px solid Black;
-            background-color: #ffffff;
-            padding-top: 0px;
-            
-            padding-left: 0px;
-            padding-bottom: 0px;
-            
+        #container {
+            display: grid;
+            grid-template-columns: 1fr 4fr;
+            column-gap: 24px;
+            margin: 0 auto;
+            max-width: 1400px;
         }
-        
     </style>
   </head>
-  <div><button id = "run" type="button2">Run</button></div>
 <body>
     <nav class="navbar navbar-dark bg-dark bg-scarlet">
         <a href="#" class="navbar-brand">Astronauts and Aliens by Code 4 Community at Ohio State</a>
@@ -38,5 +33,18 @@
                 <option value="4">Level 4</option>
             </select> -->
     </nav>
+    <br>
+
+
+    <div id="container">
+        <div class="text-center">
+            <p><b>Goal</b></p>
+            <p></p>
+            <p><b>Instructions</b></p>
+            <p>Use the arrow keys to control the mouse. Use the code editor below to change how the mouse moves.</p>
+            <div><button id = "run" type="button2">Run</button></div>
+        </div>
+        <div id="game"></div>
+    </div>
 </body>
 </html>
