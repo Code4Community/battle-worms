@@ -11,6 +11,8 @@ var scrollWidth = 2*screenWidth; // width of the rolling screen
 var screenHeight = 600;
 var astroTurnCounter = 0;
 var astroTurn; // astroTurn is true if it's the player's turn.
+//var astronautsLeft;
+//var aliensLeft;
 
 //Config data used to build the game
 var config = {
@@ -162,18 +164,22 @@ Alien.prototype.easyTurn = function() {
 }
 
 
-// Function that takes care of all turns anc cycling aliens and astronauts
+
+
+// Function that takes care of all turns and cycling aliens and astronauts
 function masterTurn()
 {
-    var counter = 0;
-    while(astronautsLeft > 0 && aliensLeft > 0)
+    //var counter = 0;
+    
+    for(i = 0; i < 3;i++)
     {
-        
-
-
-        if(counter == 2) counter = 0;
-        else counter++;
+        //astroTurn(i);
+        alienTurn(i);    
     }
+            
+
+
+        
 
 
     // game over thing
@@ -181,24 +187,51 @@ function masterTurn()
 }
 
 // One alien turn
-function alienTurn()
+function alienTurn(current)
 {
+   
+   // while(!allStopped(aliens,astronauts))
+    aliens[current].easyTurn();
+    
+    //while(!allStopped(aliens,astronauts))
+    aliens[current].easyTurn();
 
-
-
-
-
-
+   // while(!allStopped(aliens,astronauts))
+    aliens[current].easyTurn();
 }
+
+// One astronaut turn
+function astroTurn(current)
+{
+    console.log("astro turn");
+}
+
+
 
 
 
 
 // Run button that does one alien turn
 document.getElementById("run").addEventListener("click", (event) => {
-    aliens[0].easyTurn();
+    masterTurn();
   });
 
+  // Jump button that does an astronaut jump
+  document.getElementById("jump").addEventListener("click", (event) => {
+    masterTurn();
+  });
+  // Left button that moves astronaut left
+  document.getElementById("left").addEventListener("click", (event) => {
+    masterTurn();
+  });
+  // Right button that moves astronaut right
+  document.getElementById("right").addEventListener("click", (event) => {
+    masterTurn();
+  });
+  // Fire button that fires a shot from an astronaut
+  document.getElementById("fire").addEventListener("click", (event) => {
+    masterTurn();
+  });
 
 
 
@@ -422,6 +455,7 @@ function bulletTouchingSprite(){
             if(Phaser.Geom.Intersects.RectangleToRectangle(alienBound,bulletBounds))
             {
                 disappearBullet();
+                astronautsLeft--;
             }
         }
     } else {
@@ -433,6 +467,7 @@ function bulletTouchingSprite(){
             if(Phaser.Geom.Intersects.RectangleToRectangle(astroBound,bulletBounds))
             {
                 disappearBullet();
+                aliensLeft--;
             }
         }
     }
