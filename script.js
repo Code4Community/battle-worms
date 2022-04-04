@@ -63,6 +63,7 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
     }
 
 }
+
 // Astronuats are the players of type entitiy
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
@@ -71,6 +72,7 @@ class Astronaut extends Entity {
         this.name = "Astronaut "+index;
     }
 }
+
 // Aliens are the computer-controlled enemies of type entity
 class Alien extends Entity {
     constructor(scene, x, y, index) {
@@ -79,6 +81,7 @@ class Alien extends Entity {
         this.name = "Alien "+index;
     }
 }
+
 // Function to allow entity types to move left
 Entity.prototype.moveLeft = function() {
     this.setVelocityX(-140);
@@ -93,6 +96,7 @@ Entity.prototype.moveLeft = function() {
         that.setVelocityX(0);
     }, 2000);
 }
+
 // Function to allow entity types to move right
 Entity.prototype.moveRight = function() {
     this.setVelocityX(140);
@@ -101,6 +105,7 @@ Entity.prototype.moveRight = function() {
         that.setVelocityX(0);
     }, 2000);
 }
+
 // Function to allow entity types to jump left
 Entity.prototype.jumpLeft = function() {
     if(this.body.touching.down) {
@@ -109,6 +114,7 @@ Entity.prototype.jumpLeft = function() {
         this.isJumping = true;
     }
 }
+
 // Function to allow entity types to jump right 
 Entity.prototype.jumpRight = function() {
     if(this.body.touching.down) {
@@ -117,6 +123,7 @@ Entity.prototype.jumpRight = function() {
         this.isJumping = true;
     }
 }
+
 // Function to allow entity types to Fire a bullet
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
@@ -124,6 +131,7 @@ Entity.prototype.fire = function() {
     bullet.setVelocityX(-100);
     bullet.setVelocityY(-500);
 }
+
 // -------------------------------------End Entity Definitions ------------------------------------------
 
 
@@ -186,14 +194,10 @@ function masterTurn()
 // One alien turn
 function alienTurn(current)
 {
-   
-   // while(!allStopped(aliens,astronauts))
     aliens[current].easyTurn();
     
-    //while(!allStopped(aliens,astronauts))
     aliens[current].easyTurn();
 
-   // while(!allStopped(aliens,astronauts))
     aliens[current].easyTurn();
 }
 
@@ -204,8 +208,6 @@ function astroTurn(current)
 }
 
 // -----------------------------------End Turn Based Movement---------------------------------------------
-
-
 
   // Run button that does one alien turn
   document.getElementById("run").addEventListener("click", (event) => {
@@ -247,9 +249,9 @@ function preload (){
     this.load.image('num3', 'assets/numbers/number3.png');
     this.load.image('Spaceship', 'assets/Spaceship.png');
 }
+
 // Create --> creates the inital image of the level on the screen
-function create ()
-{
+function create (){
     // Sets bounds of the level
     this.physics.world.setBounds(0,0,scrollWidth,screenHeight);
 
@@ -265,12 +267,12 @@ function create ()
     // Here we create the big ground platform (0,0) is the top left corner of the screen
     platforms.create(600, 650, 'ground').setScale(3).refreshBody();
 
-    //Places little platforms on the screen 
+    // Places little platforms on the screen 
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
 
-    //Create rover and spaceship obstacles 
+    // Create rover and spaceship obstacles 
     rover.create(700,340, 'Rover').setScale(.1).refreshBody();
     Spaceship.create(750,30, 'Spaceship').setScale(.1).refreshBody();
 
@@ -351,8 +353,7 @@ function create ()
 }
 
 // Update --> Continually checks for changes and updates the current state of the game 
-  function update ()
-{
+  function update (){
     
    // Keeps the numbers over the heads of the astronauts and aliens.
     for(i = 0; i < astronautsLeft; i++) {
@@ -386,30 +387,23 @@ function create ()
         }
     }
 
+    //If bullet is touching the platform 
     if(bullet.body.touching.down) {
         disappearBullet();
     }
 
-    
+    bulletTouchingSprite() //EDIT THIS 
 
-    
-    
-    bulletTouchingSprite()
-
-    if (gameOver)
-    {
-        return;
-    }
-
-    if (cursors.left.isDown)
-    {
+    //Conditions to move screen left and right 
+    if (cursors.left.isDown){
         this.cameras.main.scrollX -= 5;
     }
-    if (cursors.right.isDown)
-    {
+    if (cursors.right.isDown){
         this.cameras.main.scrollX += 5;
     }
 
+
+    //Tests for movements of entitity class 
     if(keyL.isDown) {
         astronauts[0].moveLeft();
         astroTurnCounter++;
@@ -425,7 +419,6 @@ function create ()
         astroTurnCounter++;
     }
     
-
     if(keyJ.isDown) {
         aliens[0].jumpLeft();
     }
@@ -434,11 +427,21 @@ function create ()
         aliens[1].jumpRight();
     }
 
+    //EVENTUALLY HAVE TO BE SOME CONDTION TO END THE GAME WHERE ALL 3 ALIENS OR ASTRONAUTS ARE DEAD
+    if (gameOver)
+    {
+        return;
+    }
 }
 
+//------------------------------- End PRELOAD, CREATE, & UPDATE  ---------------------------------------
 
-// ------------------------------- End PRELOAD, CREATE, & UPDATE  ---------------------------------------
+
+
+//---------------------------------------- Extra Functions ---------------------------------------------
+
 function bulletTouchingSprite(){
+    //NEED TO CHANGE TO POSSIBLY 2 BULLETS
     //if it is the astro turn or if alien turn
     //remove the ! when the turns are configured 
     if(!astroTurn){
@@ -472,14 +475,6 @@ function bulletTouchingSprite(){
 function disappearBullet() {
     bullet.setActive(false).setVisible(false);
 }
-/*
-    Returns boolean that is true if all the aliens and astronauts are not moving.
-*/
-function allStopped(aliens, astronauts) {
-    var allStopped = true;
-    for(i = 0; i < aliensTotal; i++) {
-        allStopped = allStopped && (aliens[i].body.velocity == 0);
-        allStopped = allStopped && (astronauts[i].body.velocity == 0);
-    }
-    return allStopped;
-}
+
+
+//-------------------------------------- End Extra Functions --------------------------------------------
