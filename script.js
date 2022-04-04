@@ -7,6 +7,13 @@ var scoreText;
 var bullet;
 var rover;
 
+// create a place  for astronauts
+astronauts = [];
+astronautsTotal = 3;
+// create a place for aliens 
+aliens = [];
+aliensTotal = 3;
+
 //Screen Seize and Camera
 var screenWidth = 800;
 var scrollWidth = 2*screenWidth; // width of the rolling screen
@@ -54,6 +61,9 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
         // isJumping is true when the player is jumping.
         
         var isJumping = false;
+
+        //alive is true when the entity is alive and false when it is dead 
+        var alive = true;
 
         // Creates number sprites above heads of Entity objects.
         index++;
@@ -290,18 +300,14 @@ function create ()
     // It is the player's turn first.
     astroTurn = true;
 
-    // create and place astronauts
-    astronauts = [];
-    astronautsTotal = 3;
+    
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
         // Here is where we decide where Astronouts start
         astronauts.push(new Astronaut(this, 800 + (i * 50), 450, i));
     }
 
-    // create and place aliens 
-    aliens = [];
-    aliensTotal = 3;
+
     aliensLeft = 3;
     for(i=0; i < aliensTotal; i++) {
         // Here is where we decide where Aliens start.
