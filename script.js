@@ -114,6 +114,12 @@ Entity.prototype.jumpRight = function() {
     if(this.body.touching.down) {
         this.setVelocityY(-300);
         this.setVelocityX(140);
+        setTimeout(function () {
+            this.physics.add.collider(this, platforms, function() {
+                this.velocity = 0;
+                
+            });
+        }, 100);
         this.isJumping = true;
     }
 }
@@ -136,10 +142,7 @@ Alien.prototype.easyTurn = function() {
     var min = 1;
     var max = 6;
     var myRand = Math.floor(Math.random() * (max - min)) + min;
-   
     //console.log(myRand);
-   
-
     switch(myRand) {
         case 1:
             this.moveLeft();
@@ -162,21 +165,35 @@ Alien.prototype.easyTurn = function() {
             //console.log("jumping left");
             break;
          //default:
-
     }
-
 }
 
 // Function that takes care of all turns and cycling aliens and astronauts
-function masterTurn()
+function masterTurn(turnCounter, astroTurn)
 {
-    //var counter = 0;
-    
-    for(i = 0; i < 3;i++)
-    {
-        //astroTurn(i);
-        alienTurn(i);    
+    if(turnCounter > 2) {
+        astroTurn = !astroTurn;
+        turnCounter = 0;
+        // not sure if this should be return or recursive call
+        return;
     }
+    if(astroTurn) {
+        if(astronauts[turnCounter].alive()) {
+            
+        } else {
+            turnCounter++;
+            // not sure if this should be return or recursive call
+            return;
+        }
+    } else {
+        if(aliens[turnCounter].alive()) {
+            aliens[turnCounter].easyTurn();
+        } else {
+            turnCounter++;
+            // not sure if this should be return or recursive call
+        }
+    }
+    
 
 
     // game over thing
