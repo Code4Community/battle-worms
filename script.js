@@ -6,13 +6,14 @@ var gameOver = false;
 var scoreText;
 var bullet;
 var rover;
+
+//Screen Seize and Camera
 var screenWidth = 800;
 var scrollWidth = 2*screenWidth; // width of the rolling screen
 var screenHeight = 600;
+
 var astroTurnCounter = 0;
 var astroTurn; // astroTurn is true if it's the player's turn.
-//var astronautsLeft;
-//var aliensLeft;
 
 //Config data used to build the game
 var config = {
@@ -37,7 +38,9 @@ var config = {
 //Define the game
 var game = new Phaser.Game(config);
 
-// Enitity class that defines movement of the players and enemies
+//--------------------------------------Entity Definitions --------------------------------------------
+
+// Enitity class that defines movement of the players (astronauts) and enemies (alines)
 class Entity extends Phaser.Physics.Arcade.Sprite {
     constructor(scene, x, y, sprite, index) {
         super(scene, x, y, sprite);
@@ -60,8 +63,7 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
     }
 
 }
-
-// Astronuats are the players.
+// Astronuats are the players of type entitiy
 class Astronaut extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'astronautidle', index);
@@ -69,8 +71,7 @@ class Astronaut extends Entity {
         this.name = "Astronaut "+index;
     }
 }
-
-// Aliens are the computer-controlled enemies.
+// Aliens are the computer-controlled enemies of type entity
 class Alien extends Entity {
     constructor(scene, x, y, index) {
         super(scene, x, y, 'alienidle', index);
@@ -78,7 +79,7 @@ class Alien extends Entity {
         this.name = "Alien "+index;
     }
 }
-// Still need to add animations for moveLeft and moveRight.
+// Function to allow entity types to move left
 Entity.prototype.moveLeft = function() {
     this.setVelocityX(-140);
     /*
@@ -92,7 +93,7 @@ Entity.prototype.moveLeft = function() {
         that.setVelocityX(0);
     }, 2000);
 }
-
+// Function to allow entity types to move right
 Entity.prototype.moveRight = function() {
     this.setVelocityX(140);
     var that = this;
@@ -100,7 +101,7 @@ Entity.prototype.moveRight = function() {
         that.setVelocityX(0);
     }, 2000);
 }
-
+// Function to allow entity types to jump left
 Entity.prototype.jumpLeft = function() {
     if(this.body.touching.down) {
         this.setVelocityY(-300);
@@ -108,7 +109,7 @@ Entity.prototype.jumpLeft = function() {
         this.isJumping = true;
     }
 }
-
+// Function to allow entity types to jump right 
 Entity.prototype.jumpRight = function() {
     if(this.body.touching.down) {
         this.setVelocityY(-300);
@@ -116,18 +117,19 @@ Entity.prototype.jumpRight = function() {
         this.isJumping = true;
     }
 }
-
-
-
-
-// Need to add x and y velocity inputs.
+// Function to allow entity types to Fire a bullet
 Entity.prototype.fire = function() {
     bullet.setPosition(this.x, this.y);
     bullet.setActive(true).setVisible(true);
     bullet.setVelocityX(-100);
     bullet.setVelocityY(-500);
 }
+// -------------------------------------End Entity Definitions ------------------------------------------
 
+
+
+
+// -------------------------------------- Turn Based Movement -------------------------------------------
 
 // An easy alien turn that chooses one of the five moves to do
 Alien.prototype.easyTurn = function() {
@@ -165,9 +167,6 @@ Alien.prototype.easyTurn = function() {
 
 }
 
-
-
-
 // Function that takes care of all turns and cycling aliens and astronauts
 function masterTurn()
 {
@@ -178,10 +177,6 @@ function masterTurn()
         //astroTurn(i);
         alienTurn(i);    
     }
-            
-
-
-        
 
 
     // game over thing
@@ -208,15 +203,15 @@ function astroTurn(current)
     console.log("astro turn");
 }
 
+// -----------------------------------End Turn Based Movement---------------------------------------------
 
 
 
-// Run button that does one alien turn
-document.getElementById("run").addEventListener("click", (event) => {
+  // Run button that does one alien turn
+  document.getElementById("run").addEventListener("click", (event) => {
     masterTurn();
   });
-
-
+/* Do we need these buttons ?????????????????
   // Jump button that does an astronaut jump
   document.getElementById("jump").addEventListener("click", (event) => {
     masterTurn();
@@ -233,12 +228,15 @@ document.getElementById("run").addEventListener("click", (event) => {
   document.getElementById("fire").addEventListener("click", (event) => {
     masterTurn();
   });
+*/
 
 
-function preload ()
-{
+//------------------------------------PRELOAD, CREATE & UPDATE -----------------------------------------
+
+// Preload --> Happens before create --> Mostly just loads the images and spritesheets at the moment.  
+function preload (){
     // Load all of the images and assign a name to them
-    this.load.image('sky', 'assets/nightsky.png');
+    this.load.image('nightSky', 'assets/nightsky.png');
     this.load.image('ground', 'assets/Obstacle.png');
     this.load.image('Rover', 'assets/Rover.png');
     this.load.spritesheet('humanobstacle', 'assets/humanObstacles.png', {frameWidth: 64, frameHeight: 64});
@@ -249,43 +247,40 @@ function preload ()
     this.load.image('num3', 'assets/numbers/number3.png');
     this.load.image('Spaceship', 'assets/Spaceship.png');
 }
-
+// Create --> creates the inital image of the level on the screen
 function create ()
 {
+    // Sets bounds of the level
     this.physics.world.setBounds(0,0,scrollWidth,screenHeight);
-    //  A simple background for our game
-    this.add.image(400, 300, 'sky');
-    this.add.image(1200, 300, 'sky');
+
+    // Background for the game --> there are 2 to stretch across the entire level since it scrolls
+    this.add.image(400, 300, 'nightSky');
+    this.add.image(1200, 300, 'nightSky');
 
     // Define Static Groups
     platforms = this.physics.add.staticGroup();
     rover     = this.physics.add.staticGroup();
     Spaceship = this.physics.add.staticGroup();
 
-    // Here we create the ground.
+    // Here we create the big ground platform (0,0) is the top left corner of the screen
     platforms.create(600, 650, 'ground').setScale(3).refreshBody();
 
-    // Place our static images on the screen
+    //Places little platforms on the screen 
     platforms.create(600, 400, 'ground');
     platforms.create(50, 250, 'ground');
     platforms.create(750, 220, 'ground');
+
+    //Create rover and spaceship obstacles 
     rover.create(700,340, 'Rover').setScale(.1).refreshBody();
     Spaceship.create(750,30, 'Spaceship').setScale(.1).refreshBody();
 
-    // The player and its settings
-    player = this.physics.add.sprite(100, 400, 'dude');
-    player.setSize(64, 64, true);
-    player.setScale(0.8, 0.8);
-
-    // [0] for large rock, [1] for small rocks, [2] for small crates, [3] for large crate
-    rover.create(700,350, 'rover').setScale(.1).refreshBody();
-
     // Bullet physics and properties
-    bullet = this.physics.add.sprite(200, 10, '1bitblock1.png');
+    bullet = this.physics.add.sprite(200, 500, ''); ///////// NEED TO RENDER SOME TYPE OF PICTURE HERE !!!!!!!!!!!!!!!!!!!!!!
     disappearBullet();
     bullet.body.collideWorldBounds = true;
     bullet.body.onWorldBounds = true;
 
+    // Bullet disappears when it hits the worldbounds 
     this.physics.world.on('worldbounds', (body, up, down, left, right)=>
     {
         if(up || down || left || right) {
@@ -295,6 +290,7 @@ function create ()
     // It is the player's turn first.
     astroTurn = true;
 
+    // create and place astronauts
     astronauts = [];
     astronautsTotal = 3;
     astronautsLeft = 3;
@@ -303,6 +299,7 @@ function create ()
         astronauts.push(new Astronaut(this, 800 + (i * 50), 450, i));
     }
 
+    // create and place aliens 
     aliens = [];
     aliensTotal = 3;
     aliensLeft = 3;
@@ -333,7 +330,7 @@ function create ()
         repeat: -1
     });
 
-    //  Input Events
+    // Input Events
     cursors = this.input.keyboard.createCursorKeys();
     spacebar = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.SPACE);
     keyL = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.L);
@@ -342,26 +339,22 @@ function create ()
     keyJ = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.J);
     keyK = this.input.keyboard.addKey(Phaser.Input.Keyboard.KeyCodes.K);
 
-    //bombs = this.physics.add.group();
-
-    // The score
+    // EDIT TO COUNT HOW MANY ALIENS ARE STILL PRESENT  !!!!!!!!!!!!!!!!!!!!!!!!!
     scoreText = this.add.text(16, 16, 'Aliens: 0', { fontSize: '32px', fill: '#FFFFFF' });
 
-    // Collide the player and the stars with the platforms
+    // collider with bullet and platform 
     this.physics.add.collider(bullet, platforms);
 
-    this.cameras.main.setBounds(0, 0,scrollWidth, screenHeight);
+    // Create camera which allows to scroll with arrow keys across the screen 
+    this.cameras.main.setBounds(0, 0, scrollWidth, screenHeight);
 
 }
 
+// Update --> Continually checks for changes and updates the current state of the game 
   function update ()
 {
-
-
-   
-    /*
-    Keeps the numbers over the heads of the astronauts and aliens.
-    */
+    
+   // Keeps the numbers over the heads of the astronauts and aliens.
     for(i = 0; i < astronautsLeft; i++) {
         astronauts[i].headNumber.setPosition(astronauts[i].x, astronauts[i].y - 40);
     }
@@ -443,6 +436,8 @@ function create ()
 
 }
 
+
+// ------------------------------- End PRELOAD, CREATE, & UPDATE  ---------------------------------------
 function bulletTouchingSprite(){
     //if it is the astro turn or if alien turn
     //remove the ! when the turns are configured 
