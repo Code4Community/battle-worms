@@ -131,7 +131,7 @@ Entity.prototype.jumpRight = function() {
         this.setVelocityY(-300);
         this.setVelocityX(140);
         setTimeout(function () {
-            this.physics.add.collider(this, platforms, function() {
+            game.physics.add.collider(this, platforms, function() {
                 this.velocity = 0;
                 
             });
@@ -160,29 +160,22 @@ Alien.prototype.easyTurn = function() {
     var min = 1;
     var max = 6;
     var myRand = Math.floor(Math.random() * (max - min)) + min;
-    //console.log(myRand);
     switch(myRand) {
         case 1:
             this.moveLeft();
-            //console.log("moving left");
             break;
         case 2:
             this.moveRight();
-            //console.log("moving right");
             break;
         case 3:
             this.fire();
-           // console.log("firing");
             break;
         case 4:
             this.jumpLeft();
-            //console.log("jumping left");
             break;
         case 5:
             this.jumpRight();
-            //console.log("jumping left");
-            break;
-         //default:
+            break;s
     }
 }
 
@@ -498,6 +491,5 @@ function bulletTouchingSprite(){
 function disappearBullet() {
     bullet.setActive(false).setVisible(false);
 }
-
 
 //-------------------------------------- End Extra Functions --------------------------------------------
