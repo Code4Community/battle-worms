@@ -138,7 +138,8 @@ Entity.prototype.jumpRight = function() {
         setTimeout(function () {
             game.physics.add.collider(this, platforms, function() {
                 this.velocity = 0;
-                
+                turnCounter++;
+                masterTurn(turnCounter, astroTurn);
             });
         }, 100);
         this.isJumping = true;
@@ -190,15 +191,15 @@ function masterTurn(turnCounter, astroTurn)
     if(turnCounter > 2) {
         astroTurn = !astroTurn;
         turnCounter = 0;
-        // not sure if this should be return or recursive call
+        masterTurn(turnCounter, astroTurn);
         return;
     }
     if(astroTurn) {
         if(astronautsAlive[turnCounter]) {
-            
+            astronauts[0].jumpRight();
         } else {
             turnCounter++;
-            // not sure if this should be return or recursive call
+            masterTurn(turnCounter, astroTurn);
             return;
         }
     } else {
@@ -206,7 +207,7 @@ function masterTurn(turnCounter, astroTurn)
             aliens[turnCounter].easyTurn();
         } else {
             turnCounter++;
-            // not sure if this should be return or recursive call
+            masterTurn(turnCounter, astroTurn);
         }
     }
     
@@ -214,16 +215,6 @@ function masterTurn(turnCounter, astroTurn)
 
     // game over thing
 
-}
-
-// One alien turn
-function alienTurn(current)
-{
-    aliens[current].easyTurn();
-    
-    aliens[current].easyTurn();
-
-    aliens[current].easyTurn();
 }
 
 // One astronaut turn
@@ -238,25 +229,6 @@ function astroTurn(current)
   document.getElementById("run").addEventListener("click", (event) => {
     masterTurn();
   });
-/* Do we need these buttons ?????????????????
-  // Jump button that does an astronaut jump
-  document.getElementById("jump").addEventListener("click", (event) => {
-    masterTurn();
-  });
-  // Left button that moves astronaut left
-  document.getElementById("left").addEventListener("click", (event) => {
-    masterTurn();
-  });
-  // Right button that moves astronaut right
-  document.getElementById("right").addEventListener("click", (event) => {
-    masterTurn();
-  });
-  // Fire button that fires a shot from an astronaut
-  document.getElementById("fire").addEventListener("click", (event) => {
-    masterTurn();
-  });
-*/
-
 
 //------------------------------------PRELOAD, CREATE & UPDATE -----------------------------------------
 
