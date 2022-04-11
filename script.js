@@ -10,9 +10,11 @@ var rover;
 // create a place  for astronauts
 astronauts = [];
 astronautsTotal = 3;
+astronautsAlive = [true,true,true];
 // create a place for aliens 
 aliens = [];
 aliensTotal = 3;
+aliensAlive = [true,true,true];
 
 //Screen Seize and Camera
 var screenWidth = 800;
@@ -59,11 +61,10 @@ class Entity extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.collider(this, platforms);
 
         // isJumping is true when the player is jumping.
-        
-        var isJumping = false;
+        this.isJumping = false;
 
         //alive is true when the entity is alive and false when it is dead 
-        var alive = true;
+        this.alive = true;
 
         // Creates number sprites above heads of Entity objects.
         index++;
@@ -80,6 +81,8 @@ class Astronaut extends Entity {
         super(scene, x, y, 'astronautidle', index);
         index++;
         this.name = "Astronaut "+index;
+
+        
     }
 }
 
@@ -89,6 +92,8 @@ class Alien extends Entity {
         super(scene, x, y, 'alienidle', index);
         index++;
         this.name = "Alien "+index;
+
+        
     }
 }
 
@@ -189,7 +194,7 @@ function masterTurn(turnCounter, astroTurn)
         return;
     }
     if(astroTurn) {
-        if(astronauts[turnCounter].alive()) {
+        if(astronautsAlive[turnCounter]) {
             
         } else {
             turnCounter++;
@@ -197,7 +202,7 @@ function masterTurn(turnCounter, astroTurn)
             return;
         }
     } else {
-        if(aliens[turnCounter].alive()) {
+        if(aliensAlive[turnCounter]) {
             aliens[turnCounter].easyTurn();
         } else {
             turnCounter++;
@@ -315,6 +320,7 @@ function create (){
     
     astronautsLeft = 3;
     for(i=0; i < astronautsTotal; i++) {
+
         // Here is where we decide where Astronouts start
         astronauts.push(new Astronaut(this, 800 + (i * 50), 450, i));
     }
