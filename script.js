@@ -21,8 +21,8 @@ var screenWidth = 800;
 var scrollWidth = 2*screenWidth; // width of the rolling screen
 var screenHeight = 600;
 
-var astroTurnCounter = 0;
-var astroTurn; // astroTurn is true if it's the player's turn.
+var turnCounter = 0;
+var astroTurn = true; // astroTurn is true if it's the player's turn.
 
 //Config data used to build the game
 var config = {
@@ -136,11 +136,13 @@ Entity.prototype.jumpRight = function() {
         this.setVelocityY(-300);
         this.setVelocityX(140);
         setTimeout(function () {
-            game.physics.add.collider(this, platforms, function() {
-                this.velocity = 0;
-                turnCounter++;
-                masterTurn(turnCounter, astroTurn);
-            });
+
+            // Trying to use a collider to determine when jumping Entity lands
+            // game.physics.add.collider(this, platforms, function() {
+            //     this.velocity = 0;
+            //     turnCounter++;
+            //     masterTurn(turnCounter, astroTurn);
+            //});
         }, 100);
         this.isJumping = true;
     }
@@ -196,7 +198,10 @@ function masterTurn(turnCounter, astroTurn)
     }
     if(astroTurn) {
         if(astronautsAlive[turnCounter]) {
-            astronauts[0].jumpRight();
+            // placeholder call
+            // user input will come here
+            turnCounter++;
+            astronauts[0].jumpLeft();
         } else {
             turnCounter++;
             masterTurn(turnCounter, astroTurn);
@@ -227,7 +232,7 @@ function astroTurn(current)
 
   // Run button that does one alien turn
   document.getElementById("run").addEventListener("click", (event) => {
-    masterTurn();
+    masterTurn(turnCounter, astroTurn);
   });
 
 //------------------------------------PRELOAD, CREATE & UPDATE -----------------------------------------
